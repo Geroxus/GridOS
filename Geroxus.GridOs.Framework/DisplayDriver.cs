@@ -27,5 +27,10 @@ namespace IngameScript
         {
             // TODO release managed resources here
         }
+
+        public void AddLine(string text)
+        {
+            _component.WriteText(text);
+        }
     }
 }

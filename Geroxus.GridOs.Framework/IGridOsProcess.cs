@@ -1,3 +1,5 @@
+using System;
+
 namespace IngameScript
 {
     public interface IGridOsProcess : IDisposable

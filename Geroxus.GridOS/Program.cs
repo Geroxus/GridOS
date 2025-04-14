@@ -2,7 +2,6 @@
 using Sandbox.ModAPI.Ingame;
 using Sandbox.ModAPI.Interfaces;
 using SpaceEngineers.Game.ModAPI.Ingame;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -26,13 +25,15 @@ namespace IngameScript
 
         public Program()
         {
-            _os = new GridOs();
-            _os.RegisterDriver(DriverFactory.Get<IMyTextSurface>(Me.GetSurface(0)));
+            Runtime.UpdateFrequency = UpdateFrequency.Update1;
+
+            _os = new GridOs()
+                .RegisterDriver(DriverFactory.Get<IMyTextSurface>(Me.GetSurface(0)))
+                .RegisterService(ServiceFactory.GetBootService());
         }
 
         public void Save()
         {
-            Runtime.UpdateFrequency = UpdateFrequency.Update1;
         }
 
         public void Main(string argument, UpdateType updateSource)
