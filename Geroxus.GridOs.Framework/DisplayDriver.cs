@@ -1,3 +1,4 @@
+using System.Text;
 using Sandbox.ModAPI.Ingame;
 
 namespace IngameScript
@@ -5,22 +6,25 @@ namespace IngameScript
     public class DisplayDriver : IGridDriver
     {
         public string Name { get; }
-        public int ProcessId { get; }
+        public ProcessId ProcessId { get; }
         
         
         private readonly IMyTextSurface _component;
+        
+        private StringBuilder DisplayText { get; } = new StringBuilder();
 
-        public DisplayDriver(IMyTextSurface component, int processId)
+        public DisplayDriver(IMyTextSurface component, ProcessId processId)
         {
             _component = component;
             
-            Name = $"DisplayDriver: {_component.Name}";
+            Name = $"DisplayDriver[{_component.DisplayName}]";
             ProcessId = processId;
         }
 
         public void Update()
         {
-            
+            _component.WriteText(DisplayText);
+            DisplayText.Clear();
         }
 
         public void Dispose()
@@ -28,9 +32,9 @@ namespace IngameScript
             // TODO release managed resources here
         }
 
-        public void AddLine(string text)
+        public void AppendLine(string text)
         {
-            _component.WriteText(text);
+            DisplayText.AppendLine(text);
         }
     }
 }

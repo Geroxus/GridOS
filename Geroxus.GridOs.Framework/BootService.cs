@@ -1,3 +1,4 @@
+using System;
 using Sandbox.ModAPI.Ingame;
 
 namespace IngameScript
@@ -5,9 +6,9 @@ namespace IngameScript
     public class BootService : GridService, IGridOsProcess
     {
         public string Name { get; }
-        public int ProcessId { get; }
+        public ProcessId ProcessId { get; }
 
-        public BootService(int processId)
+        public BootService(ProcessId processId)
         {
             Name = "GridOS Boot Service";
             ProcessId = processId;
@@ -15,7 +16,10 @@ namespace IngameScript
 
         public override void Run()
         {
-            Os.GetDrivers(typeof(DisplayDriver)).ForEach(d => (d as DisplayDriver).AddLine("Boot is Up"));
+            Action<string> write = text => Processes.GetDrivers(typeof(DisplayDriver)).ForEach(d => (d as DisplayDriver)?.AppendLine(text));
+            write("Booting...");
+            
+            Processes.GetAllProcesses().ForEach(p => write($"{p.ProcessId.Id, 6}: {p.Name}"));
         }
 
         public void Dispose()

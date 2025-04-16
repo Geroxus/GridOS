@@ -2,19 +2,19 @@ namespace IngameScript
 {
     internal class ProcessIdProvider
     {
-        private readonly int _processIdBasis;
-        private ushort _currentOffset;
+        private ProcessId ProcessIdBasis { get; }
+        private ushort CurrentOffset { get; set; }
 
-        public ProcessIdProvider(int initialProcessId)
+        public ProcessIdProvider(ProcessId initialProcessId)
         {
-            _processIdBasis = initialProcessId;
-            _currentOffset = 0;
+            ProcessIdBasis = initialProcessId;
+            CurrentOffset = 0;
         }
 
-        public int Next()
+        public ProcessId Next()
         {
-            _currentOffset++;
-            return _processIdBasis + _currentOffset;
+            CurrentOffset++;
+            return ProcessIdBasis.FromOffset(CurrentOffset);
         }
         
     }

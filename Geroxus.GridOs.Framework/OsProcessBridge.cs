@@ -5,13 +5,6 @@ using System.Linq;
 
 namespace IngameScript
 {
-    public abstract class GridService
-    {
-        protected readonly OsProcessBridge Os = OsProcessBridge.Instance;
-
-        public abstract void Run();
-    }
-
     public class OsProcessBridge
     {
         private List<IGridDriver> _drivers;
@@ -27,6 +20,11 @@ namespace IngameScript
         public ImmutableList<IGridDriver> GetDrivers(Type type)
         {
             return _drivers.Where(d => d.GetType() == type).ToImmutableList();
+        }
+
+        public ImmutableList<IGridOsProcess> GetAllProcesses()
+        {
+            return _drivers.Select(it => it as IGridOsProcess).Union(_services.Select(it => it as IGridOsProcess)).ToImmutableList();
         }
     }
 }

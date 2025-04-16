@@ -7,12 +7,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)BootService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OsProcessBridge.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ProcessId.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DisplayDriver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DriverFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IGridDriver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IGridOsProcess.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IGridService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GridService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessIdProvider.cs" />
   </ItemGroup>
 </Project>
