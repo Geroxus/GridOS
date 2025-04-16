@@ -5,11 +5,12 @@ namespace IngameScript
     public class GridOs
     {
         private List<IGridDriver> Drivers { get; } = new List<IGridDriver>();
-        private List<GridService> Services { get; } = new List<GridService>();
+        private List<IGridService> Services { get; } = new List<IGridService>();
 
         public GridOs()
         {
             OsProcessBridge.Instance.RegisterProcessLists(Drivers, Services);
+            RegisterService(ServiceFactory.GetBootService());
         }
 
         public GridOs RegisterDriver(IGridDriver driver)
@@ -18,7 +19,7 @@ namespace IngameScript
             return this;
         }
 
-        public GridOs RegisterService(GridService service)
+        public GridOs RegisterService(IGridService service)
         {
             Services.Add(service);
             return this;
@@ -31,7 +32,7 @@ namespace IngameScript
                 driver.Update();
             }
 
-            foreach (GridService service in Services)
+            foreach (IGridService service in Services)
             {
                 service.Run();
             }

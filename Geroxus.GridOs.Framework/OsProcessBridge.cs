@@ -5,13 +5,12 @@ using System.Linq;
 
 namespace IngameScript
 {
-    public class OsProcessBridge
+    public class OsProcessBridge : OsBridge<OsProcessBridge>
     {
         private List<IGridDriver> _drivers;
-        private List<GridService> _services;
-        public static OsProcessBridge Instance { get; } = new OsProcessBridge();
+        private List<IGridService> _services;
 
-        public void RegisterProcessLists(List<IGridDriver> drivers, List<GridService> services)
+        public void RegisterProcessLists(List<IGridDriver> drivers, List<IGridService> services)
         {
             _drivers = drivers;
             _services = services;
@@ -25,6 +24,12 @@ namespace IngameScript
         public ImmutableList<IGridOsProcess> GetAllProcesses()
         {
             return _drivers.Select(it => it as IGridOsProcess).Union(_services.Select(it => it as IGridOsProcess)).ToImmutableList();
+        }
+
+        public void RegisterDriver(IGridDriver driver)
+        {
+            // TODO no duplicates
+            _drivers.Add(driver);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Sandbox.Game.EntityComponents;
+﻿using System;
+using Sandbox.Game.EntityComponents;
 using Sandbox.ModAPI.Ingame;
 using Sandbox.ModAPI.Interfaces;
 using SpaceEngineers.Game.ModAPI.Ingame;
@@ -27,9 +28,9 @@ namespace IngameScript
         {
             Runtime.UpdateFrequency = UpdateFrequency.Update1;
 
-            _os = new GridOs()
-                .RegisterDriver(DriverFactory.Get<IMyTextSurface>(Me.GetSurface(0)))
-                .RegisterService(ServiceFactory.GetBootService());
+            _os = new GridOs();
+            OsGridAccessBridge.Instance.RegisterGridTerminalSystem(GridTerminalSystem);
+            LOGGER.RegisterOutput(s => Echo(s));
         }
 
         public void Save()
@@ -40,5 +41,15 @@ namespace IngameScript
         {
             _os.Operate();
         }
+    }
+
+    public static class LOGGER
+    {
+        public static void RegisterOutput(Action<string> action)
+        {
+            Write = s => action($"[[Info]] {s}");
+        }
+
+        public static Action<string> Write { get; set; }
     }
 }

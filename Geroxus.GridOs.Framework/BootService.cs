@@ -1,12 +1,15 @@
 using System;
+using System.Linq;
 using Sandbox.ModAPI.Ingame;
 
 namespace IngameScript
 {
-    public class BootService : GridService, IGridOsProcess
+    public class BootService : IGridService
     {
         public string Name { get; }
         public ProcessId ProcessId { get; }
+        private OsProcessBridge Processes { get; } = OsProcessBridge.Instance;
+        private OsGridAccessBridge Grid { get; } = OsGridAccessBridge.Instance;
 
         public BootService(ProcessId processId)
         {
@@ -14,8 +17,14 @@ namespace IngameScript
             ProcessId = processId;
         }
 
-        public override void Run()
+        public void Run()
         {
+            // .RegisterDriver(DriverFactory.Get<IMyTextSurface>(Me.GetSurface(0)))
+            Grid.Get(DriverFactory.Get).ForEach(Processes.RegisterDriver);
+            LOGGER.Write("Boot registered displays");
+
+            
+            // displaying stuff
             Action<string> write = text => Processes.GetDrivers(typeof(DisplayDriver)).ForEach(d => (d as DisplayDriver)?.AppendLine(text));
             write("Booting...");
             
