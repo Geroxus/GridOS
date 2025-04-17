@@ -13,11 +13,11 @@ namespace IngameScript
         
         private StringBuilder DisplayText { get; } = new StringBuilder();
 
-        public DisplayDriver(IMyTextSurface component, ProcessId processId)
+        public DisplayDriver(IMyTextSurface component, ProcessId processId, string name)
         {
             _component = component;
             
-            Name = $"DisplayDriver[{_component.DisplayName}]";
+            Name = name;
             ProcessId = processId;
         }
 

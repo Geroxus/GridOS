@@ -20,7 +20,7 @@ namespace IngameScript
         public void Run()
         {
             // .RegisterDriver(DriverFactory.Get<IMyTextSurface>(Me.GetSurface(0)))
-            Grid.Get(DriverFactory.Get).ForEach(Processes.RegisterDriver);
+            Grid.Get<IMyTextSurface>(DriverFactory.Get).ForEach(Processes.RegisterDriver);
             LOGGER.Write("Boot registered displays");
 
             

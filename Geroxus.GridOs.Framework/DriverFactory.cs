@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Sandbox.ModAPI.Ingame;
 
 namespace IngameScript
@@ -7,11 +8,12 @@ namespace IngameScript
     {
         private static readonly ProcessIdProvider ProcessIdProvider = new ProcessIdProvider((new ProcessId(90000)));
 
-        public static IGridDriver Get<T>(T component)
+        public static IGridDriver Get<T>(IEnrichedComponent<T> enrichedComponent)
         {
-            if (component is IMyTextSurface)
+            if (enrichedComponent.Component is IMyTextSurface)
             {
-                return new DisplayDriver(component as IMyTextSurface, ProcessIdProvider.Next());
+                IMyTextSurface textSurface = enrichedComponent.Component as IMyTextSurface;
+                return OsProcessBridge.Instance.GetDrivers(typeof(DisplayDriver)).Any(d => d.Name.Contains(enrichedComponent.Name)) ? null : new DisplayDriver(textSurface, ProcessIdProvider.Next(), $"DisplayDriver[{enrichedComponent.Name}]");
             }
             throw new Exception("not implemented");
         }

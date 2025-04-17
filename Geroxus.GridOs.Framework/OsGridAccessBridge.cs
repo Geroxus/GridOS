@@ -20,8 +20,11 @@ namespace IngameScript
             _gridTerminalSystem = gridTerminalSystem;
         }
 
-        public List<IGridDriver> Get(Func<IMyTextSurface, IGridDriver> func)
+        public List<IGridDriver> Get<T>(Func<IEnrichedComponent<T>, IGridDriver> factory)
         {
+            if (typeof(T) != typeof(IMyTextSurface))
+                throw new Exception("Only IMyTextSurface supported");
+            
             List<IMyTerminalBlock> list = new List<IMyTerminalBlock>();
             _gridTerminalSystem.GetBlocksOfType(list, b => b is IMyTextSurfaceProvider);
             
@@ -42,12 +45,34 @@ namespace IngameScript
                         Ini.Set("GridOS", i.ToString(), false);
 
                     if (loadDisplay)
-                        result.Add(func(myTextSurfaceProvider.GetSurface(i)));
+                    {
+                        IMyTextSurface myTextSurface = myTextSurfaceProvider.GetSurface(i);
+                        IEnrichedComponent<T> enrichedTextSurface = new EnrichedTextSurface(myTextSurface, $"{myTerminalBlock.DisplayNameText}:{i}") as IEnrichedComponent<T>;
+                        result.Add(factory(enrichedTextSurface));
+                    };
                 }
 
                 myTerminalBlock.CustomData = Ini.ToString();
             }
             return result;
         }
+    }
+
+    internal class EnrichedTextSurface : IEnrichedComponent<IMyTextSurface>
+    {
+        public EnrichedTextSurface(IMyTextSurface myTextSurface, string name)
+        {
+            Component = myTextSurface;
+            Name = name;
+        }
+
+        public IMyTextSurface Component { get; }
+        public string Name { get; }
+    }
+
+    public interface IEnrichedComponent<T>
+    {
+        T Component { get; }
+        string Name { get; }
     }
 }

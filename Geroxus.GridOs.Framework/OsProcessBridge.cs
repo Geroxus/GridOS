@@ -29,6 +29,7 @@ namespace IngameScript
         public void RegisterDriver(IGridDriver driver)
         {
             // TODO no duplicates
+            if (driver == null) return;
             _drivers.Add(driver);
         }
     }
