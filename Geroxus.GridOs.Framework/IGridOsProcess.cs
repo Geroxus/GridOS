@@ -6,5 +6,6 @@ namespace IngameScript
     {
         string Name { get; }
         ProcessId ProcessId { get; }
+        void Run();
     }
 }

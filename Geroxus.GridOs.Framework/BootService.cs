@@ -25,11 +25,7 @@ namespace IngameScript
 
 
             // displaying stuff
-            Action<string> write = text => Processes.GetDrivers(typeof(DisplayDriver)).ForEach(d =>
-            {
-                LOGGER.Write("Write in Driver: " + d.Name);
-                (d as DisplayDriver)?.AppendLine(text);
-            });
+            Action<string> write = text => Processes.GetDrivers(typeof(DisplayDriver)).ForEach(d => (d as DisplayDriver)?.AppendLine(text));
             LOGGER.Write("Write displays");
             write("Booting...");
 

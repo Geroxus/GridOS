@@ -21,7 +21,7 @@ namespace IngameScript
             ProcessId = processId;
         }
 
-        public void Update()
+        public void Run()
         {
             _component.WriteText(DisplayText);
             DisplayText.Clear();

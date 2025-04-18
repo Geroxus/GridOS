@@ -4,32 +4,25 @@ namespace IngameScript
 {
     public class GridOs
     {
-        private Dictionary<ProcessId, IGridDriver> Drivers { get; } = new Dictionary<ProcessId, IGridDriver>();
-        private Dictionary<ProcessId, IGridService> Services { get; } = new Dictionary<ProcessId, IGridService>();
+        private Dictionary<ProcessId, IGridOsProcess> Processes { get; } = new Dictionary<ProcessId, IGridOsProcess>();
         private OsProcessBridge ProcessBridge { get; } = OsProcessBridge.Instance;
 
         public GridOs()
         {
-            OsProcessBridge.Instance.RegisterProcessLists(Drivers, Services);
+            OsProcessBridge.Instance.RegisterProcessLists(Processes);
             ProcessBridge.Register(ServiceFactory.GetBootService());
         }
 
         public void Operate()
         {
             LOGGER.Write("Operating");
-            foreach (IGridDriver driver in Drivers.Values)
+            foreach (IGridOsProcess process in Processes.Values)
             {
-                LOGGER.Write("Driver: " + driver.GetType().Name);
-                driver.Update();
-            }
-
-            foreach (IGridService service in Services.Values)
-            {
-                LOGGER.Write("Services: " + service.GetType().Name);
-                service.Run();
+                LOGGER.Write($"Process: {process.GetType().Name} : {process.Name}");
+                process.Run();
             }
             LOGGER.Write("Cleanup Operator");
-            ProcessBridge.StopNext();
+            ProcessBridge.Run();
         }
     }
 }
