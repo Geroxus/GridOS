@@ -23,11 +23,6 @@
         <AdditionalFiles Include="Instructions.readme"/>
         <AdditionalFiles Include="thumb.png"/>
     </ItemGroup>
-    <ItemGroup>
-      <Compile Include="..\Geroxus.GridOs.Framework\IProcessFactory.cs">
-        <Link>Geroxus.GridOs.Framework\IProcessFactory.cs</Link>
-      </Compile>
-    </ItemGroup>
     <Import Project="..\Geroxus.GridOs.Framework\Geroxus.GridOs.Framework.projitems" Label="Shared" />
     <Import Project="..\Geroxus.GridOs.GridUI\Geroxus.GridOs.GridUI.projitems" Label="Shared" />
 </Project>
