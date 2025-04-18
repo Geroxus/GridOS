@@ -10,6 +10,5 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)GridUI.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GridUIFactory.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IGridProgram.cs" />
   </ItemGroup>
 </Project>

@@ -23,6 +23,7 @@ namespace IngameScript
             LOGGER.Write("Boot registered displays");
 
             Processes.Register(ProgramFactory.GetGridUi());
+            Processes.Register(ProgramFactory.GetFlightCapability());
 
             // displaying stuff
             LOGGER.Write("Boot finished, Stop Booting");

@@ -25,4 +25,5 @@
     </ItemGroup>
     <Import Project="..\Geroxus.GridOs.Framework\Geroxus.GridOs.Framework.projitems" Label="Shared" />
     <Import Project="..\Geroxus.GridOs.GridUI\Geroxus.GridOs.GridUI.projitems" Label="Shared" />
+    <Import Project="..\Geroxus.GridOs.FlightCapability\Geroxus.GridOs.FlightCapability.projitems" Label="Shared" />
 </Project>

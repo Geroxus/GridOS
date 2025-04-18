@@ -6,27 +6,20 @@
     <SharedGUID>8a3cdcc5-4b55-4d87-a415-698a0e1ff06f</SharedGUID>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Bridge\EnrichedTextSurface.cs">
-      <Link>Geroxus.GridOs.Framework\Bridge\EnrichedTextSurface.cs</Link>
-    </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Bridge\IEnrichedComponent.cs">
-      <Link>Geroxus.GridOs.Framework\Bridge\IEnrichedComponent.cs</Link>
-    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Bridge\OsBridge.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Bridge\OsGridAccessBridge.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Bridge\OsProcessBridge.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\DisplayDriver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\IGridDriver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Factory\DriverFactory.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Factory\IProcessFactory.cs">
-      <Link>Geroxus.GridOs.Framework\IProcessFactory.cs</Link>
-    </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Factory\ProgramFactory.cs">
-      <Link>Geroxus.GridOs.Framework\Service\ProgramFactory.cs</Link>
-    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Factory\ServiceFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Factory\ProgramFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Factory\IProcessFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IGridProgram.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessId.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IGridOsProcess.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IEnrichedComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EnrichedTextSurface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessIdProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Service\BootService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Service\IGridService.cs" />

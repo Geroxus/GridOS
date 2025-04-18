@@ -8,5 +8,11 @@ namespace IngameScript
             var factory = new GridUiFactory();
             return factory.CreateProcess().Invoke(ProcessIdProvider.Next(), "GridUI");
         }
+
+        public static FlightCapability GetFlightCapability()
+        {
+            var factory = new FlightCapabilityFactory();
+            return factory.CreateProcess().Invoke(ProcessIdProvider.Next(), "FlightCapability");
+        }
     }
 }
