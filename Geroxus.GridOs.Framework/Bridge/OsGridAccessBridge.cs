@@ -57,22 +57,4 @@ namespace IngameScript
             return result;
         }
     }
-
-    internal class EnrichedTextSurface : IEnrichedComponent<IMyTextSurface>
-    {
-        public EnrichedTextSurface(IMyTextSurface myTextSurface, string name)
-        {
-            Component = myTextSurface;
-            Name = name;
-        }
-
-        public IMyTextSurface Component { get; }
-        public string Name { get; }
-    }
-
-    public interface IEnrichedComponent<T>
-    {
-        T Component { get; }
-        string Name { get; }
-    }
 }

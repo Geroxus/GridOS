@@ -1,5 +1,4 @@
-﻿using System;
-using Sandbox.Game.EntityComponents;
+﻿using Sandbox.Game.EntityComponents;
 using Sandbox.ModAPI.Ingame;
 using Sandbox.ModAPI.Interfaces;
 using SpaceEngineers.Game.ModAPI.Ingame;
@@ -41,15 +40,5 @@ namespace IngameScript
         {
             _os.Operate();
         }
-    }
-
-    public static class LOGGER
-    {
-        public static void RegisterOutput(Action<string> action)
-        {
-            Write = s => action($"[[Info]] {s}");
-        }
-
-        public static Action<string> Write { get; set; }
     }
 }
