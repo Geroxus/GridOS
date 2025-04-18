@@ -19,23 +19,28 @@ namespace IngameScript
 
         public void Run()
         {
-            // .RegisterDriver(DriverFactory.Get<IMyTextSurface>(Me.GetSurface(0)))
             Grid.Get<IMyTextSurface>(DriverFactory.Get).ForEach(Processes.Register);
             LOGGER.Write("Boot registered displays");
 
+            Processes.Register(ProgramFactory.GetGridUi());
 
             // displaying stuff
-            Action<string> write = text => Processes.GetDrivers(typeof(DisplayDriver)).ForEach(d => (d as DisplayDriver)?.AppendLine(text));
-            LOGGER.Write("Write displays");
-            write("Booting...");
-
-            Processes.GetAllProcesses().ForEach(p => write($"{p.ProcessId.Id, 6}: {p.Name}"));
             LOGGER.Write("Boot finished, Stop Booting");
             Processes.RegisterStop(ProcessId);
         }
 
         public void Dispose()
         {
+        }
+    }
+
+    public static class ProgramFactory
+    {
+        private static readonly ProcessIdProvider ProcessIdProvider = new ProcessIdProvider(new ProcessId(1000));
+        public static GridUI GetGridUi()
+        {
+            var factory = new GridUiFactory();
+            return factory.CreateProcess().Invoke(ProcessIdProvider.Next(), "GridUI");
         }
     }
 }
