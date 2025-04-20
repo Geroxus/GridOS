@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace IngameScript
 {
@@ -25,8 +26,11 @@ namespace IngameScript
         {
             Action<string> write = text => _processBridge.GetDrivers(typeof(DisplayDriver)).ForEach(d => (d as DisplayDriver)?.AppendLine(text));
             LOGGER.Write("Write displays");
-            write("Running Processes:");
+            
+            foreach (string info in _processBridge.GetServices().Select(s => s.Info)) write(info);
 
+            write(Environment.NewLine);
+            write("Running Processes:");
             _processBridge.GetAllProcesses().ForEach(p => write($"{p.ProcessId.Id, 6}: {p.Name}"));
         }
 

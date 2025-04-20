@@ -34,6 +34,8 @@ namespace IngameScript
         public void Dispose()
         {
         }
+
+        public string Info { get; } = "BootService available...";
     }
     public class BootServiceFactory : IProcessFactory<BootService>
     {

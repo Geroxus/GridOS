@@ -16,11 +16,19 @@ namespace IngameScript
             _processes = processes;
         }
 
-        public ImmutableList<IGridDriver> GetDrivers(Type type)
+        public ImmutableList<IGridDriver> GetDrivers(Type type = null)
         {
             return _processes.Values
                 .OfType<IGridDriver>()
-                .Where(d => d.GetType() == type)
+                .Where(d => type == null || d.GetType() == type)
+                .ToImmutableList();
+        }
+
+        public ImmutableList<IGridService> GetServices(Type type = null)
+        {
+            return _processes.Values
+                .OfType<IGridService>()
+                .Where(s => type == null || s.GetType() == type)
                 .ToImmutableList();
         }
 

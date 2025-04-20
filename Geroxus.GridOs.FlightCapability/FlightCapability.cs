@@ -1,7 +1,14 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using VRageMath;
+
 namespace IngameScript
 {
     public class FlightCapability : IGridService
     {
+        public string Info { get; private set; }
+        
         public FlightCapability(ProcessId processId, string name)
         {
             Name = name;
@@ -19,9 +26,25 @@ namespace IngameScript
 
         public string Name { get; }
         public ProcessId ProcessId { get; }
+
+        private readonly StringBuilder _builder = new StringBuilder();
         public void Run()
         {
+            _builder.AppendLine("FlightCapability running...");
+            InputDriver[] inputDrivers = OsProcessBridge.Instance.GetDrivers(typeof(InputDriver)).OfType<InputDriver>().ToArray();
+            if (inputDrivers.Any(d => d.Component.GetNaturalGravity().Equals(Vector3.Zero)))
+                _builder.AppendLine("Currently in space");
+            else
+            {
+                _builder.AppendLine("NOT IMPLEMENTED");
+                foreach (InputDriver inputDriver in inputDrivers)
+                {
+                    _builder.AppendLine($"{inputDriver.Name}: {inputDriver.Component.GetNaturalGravity().ToString()}");
+                }
+            }
             
+            Info = _builder.ToString();
+            _builder.Clear();
         }
     }
 }

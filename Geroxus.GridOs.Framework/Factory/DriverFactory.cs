@@ -42,7 +42,11 @@ namespace IngameScript
         {
             ProcessId = processId;
             Name = name;
+            
+            Component = shipController;
         }
+
+        public IMyShipController Component { get; set; }
 
         public void Dispose()
         {
