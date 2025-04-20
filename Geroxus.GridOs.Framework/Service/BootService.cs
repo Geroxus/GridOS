@@ -20,7 +20,8 @@ namespace IngameScript
         public void Run()
         {
             Grid.Get<IMyTextSurface>(DriverFactory.Get).ForEach(Processes.Register);
-            LOGGER.Write("Boot registered displays");
+            Grid.Get<IMyShipController>(DriverFactory.Get).ForEach(Processes.Register);
+            LOGGER.Write("Driver registration complete");
 
             Processes.Register(ProgramFactory.Get<GridUI>());
             Processes.Register(ProgramFactory.Get<FlightCapability>());

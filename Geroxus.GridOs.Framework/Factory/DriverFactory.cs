@@ -21,9 +21,38 @@ namespace IngameScript
                 }
 
                 return (DisplayDriver)null;
+            } else if (enrichedComponent.Component is IMyShipController)
+            {
+                IMyShipController shipController = enrichedComponent.Component as IMyShipController;
+                if (!OsProcessBridge.Instance.GetDrivers(typeof(InputDriver))
+                    .Any(d => d.Name.Contains(enrichedComponent.Name)))
+                {
+                    return new InputDriver(shipController, ProcessIdProvider.Next(typeof(IGridDriver)),
+                        $"InputDriver[[{enrichedComponent.Name}]]");
+                }
             }
 
             throw new Exception("not implemented");
+        }
+    }
+
+    public class InputDriver : IGridDriver
+    {
+        public InputDriver(IMyShipController shipController, ProcessId processId, string name)
+        {
+            ProcessId = processId;
+            Name = name;
+        }
+
+        public void Dispose()
+        {
+        }
+
+        public string Name { get; }
+        public ProcessId ProcessId { get; }
+        public void Run()
+        {
+            
         }
     }
 }

@@ -22,12 +22,38 @@ namespace IngameScript
 
         public List<IGridDriver> Get<T>(Func<IEnrichedComponent<T>, IGridDriver> factory)
         {
-            if (typeof(T) != typeof(IMyTextSurface))
-                throw new Exception("Only IMyTextSurface supported");
+            if (typeof(T) == typeof(IMyTextSurface))
+                return GetDisplayDrivers(factory);
+            else if (typeof(T) == typeof(IMyShipController))
+                return GetInputDrivers(factory);
             
+            throw new Exception($"Type '{typeof(T).Name}' is not supported");
+        }
+
+        private List<IGridDriver> GetInputDrivers<T>(Func<IEnrichedComponent<T>,IGridDriver> factory)
+        {
+            List<IMyShipController> shipControllers = new List<IMyShipController>();
+            _gridTerminalSystem.GetBlocksOfType(shipControllers);
+            
+            List<IGridDriver> result = new List<IGridDriver>();
+            foreach (IMyShipController shipController in shipControllers)
+            {
+                Ini.TryParse(shipController.CustomData);
+                if (!Ini.ContainsSection("GridOS")) continue;
+
+                IEnrichedComponent<T> enrichedShipController = new EnrichedShipController(shipController)
+                    as IEnrichedComponent<T>;
+                result.Add(factory(enrichedShipController));
+            }
+            
+            return result;
+        }
+
+        private List<IGridDriver> GetDisplayDrivers<T>(Func<IEnrichedComponent<T>, IGridDriver> factory)
+        {
             List<IMyTerminalBlock> list = new List<IMyTerminalBlock>();
             _gridTerminalSystem.GetBlocksOfType(list, b => b is IMyTextSurfaceProvider);
-            
+
             List<IGridDriver> result = new List<IGridDriver>();
             foreach (var myTerminalBlock in list)
             {
@@ -47,14 +73,31 @@ namespace IngameScript
                     if (loadDisplay)
                     {
                         IMyTextSurface myTextSurface = myTextSurfaceProvider.GetSurface(i);
-                        IEnrichedComponent<T> enrichedTextSurface = new EnrichedTextSurface(myTextSurface, $"{myTerminalBlock.DisplayNameText}:{i}") as IEnrichedComponent<T>;
+                        IEnrichedComponent<T> enrichedTextSurface =
+                            new EnrichedTextSurface(myTextSurface, $"{myTerminalBlock.DisplayNameText}:{i}") as
+                                IEnrichedComponent<T>;
                         result.Add(factory(enrichedTextSurface));
-                    };
+                    }
+
+                    ;
                 }
 
                 myTerminalBlock.CustomData = Ini.ToString();
             }
+
             return result;
         }
+    }
+
+    internal class EnrichedShipController : IEnrichedComponent<IMyShipController>
+    {
+        public EnrichedShipController(IMyShipController shipController)
+        {
+            Component = shipController;
+            Name = shipController.DisplayNameText;
+        }
+
+        public IMyShipController Component { get; }
+        public string Name { get; }
     }
 }
