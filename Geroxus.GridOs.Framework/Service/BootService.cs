@@ -11,9 +11,9 @@ namespace IngameScript
         private OsProcessBridge Processes { get; } = OsProcessBridge.Instance;
         private OsGridAccessBridge Grid { get; } = OsGridAccessBridge.Instance;
 
-        public BootService(ProcessId processId)
+        public BootService(ProcessId processId, String name)
         {
-            Name = "GridOS Boot Service";
+            Name = name;
             ProcessId = processId;
         }
 
@@ -33,5 +33,10 @@ namespace IngameScript
         public void Dispose()
         {
         }
+    }
+    public class BootServiceFactory : IProcessFactory<BootService>
+    {
+        public Func<string, BootService> CreateProcess(ProcessIdProvider idProvider) =>
+            (name) => new BootService(idProvider.Next(typeof(IGridService)), "GridOS Boot Service");
     }
 }

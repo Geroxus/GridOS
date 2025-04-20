@@ -10,7 +10,9 @@ namespace IngameScript
         public GridOs()
         {
             OsProcessBridge.Instance.RegisterProcessLists(Processes);
-            ProcessBridge.Register(ServiceFactory.GetBootService());
+            
+            ProgramFactory.Register(typeof(BootService).ToString(), new BootServiceFactory());
+            ProcessBridge.Register(ProgramFactory.Get<BootService>());
         }
 
         public void Operate()

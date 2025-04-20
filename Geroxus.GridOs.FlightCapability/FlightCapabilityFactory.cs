@@ -4,6 +4,6 @@ namespace IngameScript
 {
     public class FlightCapabilityFactory : IProcessFactory<FlightCapability>
     {
-        public Func<ProcessId, string, FlightCapability> CreateProcess() => (id, name) => new FlightCapability(id, name);
+        public Func<string, FlightCapability> CreateProcess(ProcessIdProvider idProvider) => (name) => new FlightCapability(idProvider.Next(typeof(IGridService)), name);
     }
 }

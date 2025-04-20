@@ -8,14 +8,14 @@ namespace IngameScript
         private static readonly Dictionary<string, IProcessFactory<IGridOsProcess>> Factories =
             new Dictionary<string, IProcessFactory<IGridOsProcess>>();
 
-        private static readonly ProcessIdProvider ProcessIdProvider = new ProcessIdProvider(new ProcessId(1000));
+        private static readonly ProcessIdProvider ProcessIdProvider = new ProcessIdProvider();
 
         public static IGridOsProcess Get<T>() where T : IGridOsProcess
         {
             string programName = typeof(T).ToString();
             IProcessFactory<IGridOsProcess> factory;
             if (Factories.TryGetValue(programName, out factory) && factory != null)
-                return factory.CreateProcess().Invoke(ProcessIdProvider.Next(), programName);
+                return factory.CreateProcess(ProcessIdProvider).Invoke(programName);
             throw new Exception($"No factory registered for type {typeof(T).Name}");
         }
 

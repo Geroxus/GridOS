@@ -12,7 +12,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Driver\DisplayDriver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\IGridDriver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Factory\DriverFactory.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Factory\ServiceFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Factory\ProgramFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Factory\IProcessFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IGridProgram.cs" />

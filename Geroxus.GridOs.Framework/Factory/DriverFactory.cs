@@ -6,7 +6,7 @@ namespace IngameScript
 {
     public static class DriverFactory
     {
-        private static readonly ProcessIdProvider ProcessIdProvider = new ProcessIdProvider((new ProcessId(90000)));
+        private static readonly ProcessIdProvider ProcessIdProvider = new ProcessIdProvider();
 
         public static IGridDriver Get<T>(IEnrichedComponent<T> enrichedComponent)
         {
@@ -16,7 +16,7 @@ namespace IngameScript
                 if (!OsProcessBridge.Instance.GetDrivers(typeof(DisplayDriver))
                         .Any(d => d.Name.Contains(enrichedComponent.Name)))
                 {
-                    return new DisplayDriver(textSurface, ProcessIdProvider.Next(),
+                    return new DisplayDriver(textSurface, ProcessIdProvider.Next(typeof(IGridDriver)),
                         $"DisplayDriver[[{enrichedComponent.Name}]]");
                 }
 

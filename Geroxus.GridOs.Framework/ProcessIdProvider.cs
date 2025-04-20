@@ -1,20 +1,33 @@
+using System;
+
 namespace IngameScript
 {
-    internal class ProcessIdProvider
+    public class ProcessIdProvider
     {
-        private ProcessId ProcessIdBasis { get; }
-        private ushort CurrentOffset { get; set; }
+        private ProcessId ProgramProcessIdBasis { get; } = new ProcessId(1000);
+        private ushort CurrentProgramProcessIdOffset { get; set; } = 0;
+        private ProcessId ServiceProcessIdBasis { get; } = new ProcessId(40000);
+        private ushort CurrentServiceProcessIdOffset { get; set; } = 0;
+        private ProcessId DriverProcessIdBasis { get; } = new ProcessId(90000);
+        private ushort CurrentDriverProcessIdOffset { get; set; } = 0;
 
-        public ProcessIdProvider(ProcessId initialProcessId)
-        {
-            ProcessIdBasis = initialProcessId;
-            CurrentOffset = 0;
-        }
 
-        public ProcessId Next()
+        public ProcessId Next(Type type)
         {
-            CurrentOffset++;
-            return ProcessIdBasis.FromOffset(CurrentOffset);
+            if (type == typeof(IGridProgram))
+            {
+                CurrentProgramProcessIdOffset++;
+                return ProgramProcessIdBasis.FromOffset(CurrentProgramProcessIdOffset);
+            } else if (type == typeof(IGridService))
+            {
+                CurrentServiceProcessIdOffset++;
+                return ServiceProcessIdBasis.FromOffset(CurrentServiceProcessIdOffset);
+            } else if (type == typeof(IGridDriver))
+            {
+                CurrentDriverProcessIdOffset++;
+                return DriverProcessIdBasis.FromOffset(CurrentDriverProcessIdOffset);
+            }
+            throw new Exception($"Unsupported type {type.Name}");
         }
         
     }

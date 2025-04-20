@@ -1,6 +1,6 @@
 namespace IngameScript
 {
-    public class FlightCapability : IGridProgram
+    public class FlightCapability : IGridService
     {
         public FlightCapability(ProcessId processId, string name)
         {

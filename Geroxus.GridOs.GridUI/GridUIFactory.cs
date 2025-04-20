@@ -4,6 +4,6 @@ namespace IngameScript
 {
     public class GridUiFactory : IProcessFactory<GridUI>
     {
-        public Func<ProcessId, string, GridUI> CreateProcess() => (id, name) => new GridUI(id, name);
+        public Func<string, GridUI> CreateProcess(ProcessIdProvider idProvider) => (name) => new GridUI(idProvider.Next(typeof(IGridProgram)), name);
     }
 }
