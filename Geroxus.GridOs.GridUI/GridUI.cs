@@ -12,6 +12,11 @@ namespace IngameScript
             ProcessId = processId;
         }
 
+        public static void Register()
+        {
+            ProgramFactory.Register(typeof(GridUI).ToString(), new GridUiFactory());
+        }
+
         public string Name { get; }
 
         public ProcessId ProcessId { get; }

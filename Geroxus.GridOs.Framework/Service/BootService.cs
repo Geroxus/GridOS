@@ -22,8 +22,8 @@ namespace IngameScript
             Grid.Get<IMyTextSurface>(DriverFactory.Get).ForEach(Processes.Register);
             LOGGER.Write("Boot registered displays");
 
-            Processes.Register(ProgramFactory.GetGridUi());
-            Processes.Register(ProgramFactory.GetFlightCapability());
+            Processes.Register(ProgramFactory.Get<GridUI>());
+            Processes.Register(ProgramFactory.Get<FlightCapability>());
 
             // displaying stuff
             LOGGER.Write("Boot finished, Stop Booting");

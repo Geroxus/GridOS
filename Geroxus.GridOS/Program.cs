@@ -26,6 +26,9 @@ namespace IngameScript
         public Program()
         {
             Runtime.UpdateFrequency = UpdateFrequency.Update1;
+            
+            FlightCapability.Register();
+            GridUI.Register();
 
             _os = new GridOs();
             OsGridAccessBridge.Instance.RegisterGridTerminalSystem(GridTerminalSystem);

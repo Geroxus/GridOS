@@ -8,6 +8,11 @@ namespace IngameScript
             ProcessId = processId;
         }
 
+        public static void Register()
+        {
+            ProgramFactory.Register(typeof(FlightCapability).ToString(), new FlightCapabilityFactory());
+        }
+
         public void Dispose()
         {
         }

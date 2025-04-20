@@ -1,18 +1,27 @@
+using System;
+using System.Collections.Generic;
+
 namespace IngameScript
 {
     public static class ProgramFactory
     {
+        private static readonly Dictionary<string, IProcessFactory<IGridOsProcess>> Factories =
+            new Dictionary<string, IProcessFactory<IGridOsProcess>>();
+
         private static readonly ProcessIdProvider ProcessIdProvider = new ProcessIdProvider(new ProcessId(1000));
-        public static GridUI GetGridUi()
+
+        public static IGridOsProcess Get<T>() where T : IGridOsProcess
         {
-            var factory = new GridUiFactory();
-            return factory.CreateProcess().Invoke(ProcessIdProvider.Next(), "GridUI");
+            string programName = typeof(T).ToString();
+            IProcessFactory<IGridOsProcess> factory;
+            if (Factories.TryGetValue(programName, out factory) && factory != null)
+                return factory.CreateProcess().Invoke(ProcessIdProvider.Next(), programName);
+            throw new Exception($"No factory registered for type {typeof(T).Name}");
         }
 
-        public static FlightCapability GetFlightCapability()
+        public static void Register(string programName, IProcessFactory<IGridOsProcess> processFactory)
         {
-            var factory = new FlightCapabilityFactory();
-            return factory.CreateProcess().Invoke(ProcessIdProvider.Next(), "FlightCapability");
+            Factories.Add(programName, processFactory);
         }
     }
 }
