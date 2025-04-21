@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Sandbox.ModAPI.Ingame;
 using VRageMath;
 
 namespace IngameScript
@@ -39,7 +40,11 @@ namespace IngameScript
                 _builder.AppendLine("NOT IMPLEMENTED");
                 foreach (InputDriver inputDriver in inputDrivers)
                 {
-                    _builder.AppendLine($"{inputDriver.Name}: {inputDriver.Component.GetNaturalGravity().ToString()}");
+                    Vector3D naturalGravity = inputDriver.Component.GetNaturalGravity();
+                    MyShipMass shipMass = inputDriver.Component.CalculateShipMass();
+                    _builder.AppendLine($"{inputDriver.Name}:");
+                    _builder.AppendLine($"Gravity: {naturalGravity.Length()}");
+                    _builder.AppendLine($"Mass: {shipMass.TotalMass}kg({shipMass.BaseMass}kg)");
                 }
             }
             
