@@ -4,6 +4,8 @@ namespace IngameScript
 {
     public interface IProcessFactory<out T>
     {
-        Func<string, T> CreateProcess(ProcessIdProvider idProvider);
+        Func<string, T> CreationStrategy(ProcessIdProvider idProvider);
+
+        string ProcessName { get; }
     }
 }

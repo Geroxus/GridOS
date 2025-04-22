@@ -35,28 +35,4 @@ namespace IngameScript
             throw new Exception("not implemented");
         }
     }
-
-    public class InputDriver : IGridDriver
-    {
-        public InputDriver(IMyShipController shipController, ProcessId processId, string name)
-        {
-            ProcessId = processId;
-            Name = name;
-            
-            Component = shipController;
-        }
-
-        public IMyShipController Component { get; set; }
-
-        public void Dispose()
-        {
-        }
-
-        public string Name { get; }
-        public ProcessId ProcessId { get; }
-        public void Run()
-        {
-            
-        }
-    }
 }

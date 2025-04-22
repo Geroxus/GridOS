@@ -8,7 +8,7 @@
   
   <Import Project="..\Geroxus.GridOs.Framework\Geroxus.GridOs.Framework.projitems" Label="Shared" />
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)GridUI.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)GridUIFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GridUi.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GridUiFactory.cs" />
   </ItemGroup>
 </Project>

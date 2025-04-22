@@ -4,7 +4,7 @@ using VRage.Game.GUI.TextPanel;
 
 namespace IngameScript
 {
-    public class DisplayDriver : IGridDriver
+    public class DisplayDriver : IDisplayDriver
     {
         public string Name { get; }
         public ProcessId ProcessId { get; }

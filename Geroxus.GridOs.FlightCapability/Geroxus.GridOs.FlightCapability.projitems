@@ -8,8 +8,6 @@
   <Import Project="..\Geroxus.GridOs.Framework\Geroxus.GridOs.Framework.projitems" Label="Shared" />
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)FlightCapability.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)FlightCapabilityFactory.cs">
-      <Link>Geroxus.GridOs.Framework\Factory\FlightCapabilityFactory.cs</Link>
-    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)FlightCapabilityFactory.cs"/>
   </ItemGroup>
 </Project>

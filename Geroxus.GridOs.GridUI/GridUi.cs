@@ -3,19 +3,14 @@ using System.Linq;
 
 namespace IngameScript
 {
-    public class GridUI : IGridProgram
+    public class GridUi : IGridUi
     {
         private readonly OsProcessBridge _processBridge = OsProcessBridge.Instance;
 
-        public GridUI(ProcessId processId, string name)
+        public GridUi(ProcessId processId, string name)
         {
             Name = name;
             ProcessId = processId;
-        }
-
-        public static void Register()
-        {
-            ProgramFactory.Register(typeof(GridUI).ToString(), new GridUiFactory());
         }
 
         public string Name { get; }
@@ -25,7 +20,6 @@ namespace IngameScript
         public void Run()
         {
             Action<string> write = text => _processBridge.GetDrivers(typeof(DisplayDriver)).ForEach(d => (d as DisplayDriver)?.AppendLine(text));
-            LOGGER.Write("Write displays");
             
             foreach (string info in _processBridge.GetServices().Select(s => s.Info)) write(info);
 

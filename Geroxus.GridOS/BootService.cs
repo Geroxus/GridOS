@@ -23,7 +23,7 @@ namespace IngameScript
             Grid.Get<IMyShipController>(DriverFactory.Get).ForEach(Processes.Register);
             LOGGER.Write("Driver registration complete");
 
-            Processes.Register(ProgramFactory.Get<GridUI>());
+            Processes.Register(ProgramFactory.Get<GridUi>());
             Processes.Register(ProgramFactory.Get<FlightCapability>());
 
             // displaying stuff
@@ -36,10 +36,5 @@ namespace IngameScript
         }
 
         public string Info { get; } = "BootService available...";
-    }
-    public class BootServiceFactory : IProcessFactory<BootService>
-    {
-        public Func<string, BootService> CreateProcess(ProcessIdProvider idProvider) =>
-            (name) => new BootService(idProvider.Next(typeof(IGridService)), "GridOS Boot Service");
     }
 }

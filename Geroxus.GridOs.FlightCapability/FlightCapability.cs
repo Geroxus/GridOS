@@ -18,7 +18,7 @@ namespace IngameScript
 
         public static void Register()
         {
-            ProgramFactory.Register(typeof(FlightCapability).ToString(), new FlightCapabilityFactory());
+            ProgramFactory.Register(new FlightCapabilityFactory());
         }
 
         public void Dispose()

@@ -1,4 +1,5 @@
-﻿using Sandbox.Game.EntityComponents;
+﻿using System;
+using Sandbox.Game.EntityComponents;
 using Sandbox.ModAPI.Ingame;
 using Sandbox.ModAPI.Interfaces;
 using SpaceEngineers.Game.ModAPI.Ingame;
@@ -21,18 +22,20 @@ namespace IngameScript
 {
     public partial class Program : MyGridProgram
     {
-        private GridOs _os;
+        private static readonly DateTime  BuildDate = new DateTime(2025, 4, 23);
+        
+        private readonly GridOs _os;
 
         public Program()
         {
             Runtime.UpdateFrequency = UpdateFrequency.Update1;
             
             FlightCapability.Register();
-            GridUI.Register();
 
-            _os = new GridOs();
-            OsGridAccessBridge.Instance.RegisterGridTerminalSystem(GridTerminalSystem);
+            _os = GridOs.BootStrap(GridTerminalSystem);
             LOGGER.RegisterOutput(s => Echo(s));
+
+            _os.Version = $"0.1-beta-{BuildDate.Date.ToShortDateString()}";
         }
 
         public void Save()

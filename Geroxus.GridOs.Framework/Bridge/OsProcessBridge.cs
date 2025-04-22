@@ -34,7 +34,6 @@ namespace IngameScript
 
         public ImmutableList<IGridOsProcess> GetAllProcesses()
         {
-            LOGGER.Write($"Getting all [[{_processes.Count}]] grid processes");
             return _processes.Values.ToImmutableList();
         }
 

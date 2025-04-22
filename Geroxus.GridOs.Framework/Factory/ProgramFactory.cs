@@ -15,13 +15,13 @@ namespace IngameScript
             string programName = typeof(T).ToString();
             IProcessFactory<IGridOsProcess> factory;
             if (Factories.TryGetValue(programName, out factory) && factory != null)
-                return factory.CreateProcess(ProcessIdProvider).Invoke(programName);
+                return factory.CreationStrategy(ProcessIdProvider).Invoke(programName);
             throw new Exception($"No factory registered for type {typeof(T).Name}");
         }
 
-        public static void Register(string programName, IProcessFactory<IGridOsProcess> processFactory)
+        public static void Register(IProcessFactory<IGridOsProcess> processFactory)
         {
-            Factories.Add(programName, processFactory);
+            Factories.Add(processFactory.ProcessName, processFactory);
         }
     }
 }
