@@ -5,6 +5,7 @@ using System.Linq;
 using Sandbox.ModAPI.Ingame;
 using VRage;
 using VRage.Game.ModAPI.Ingame.Utilities;
+using VRageMath;
 
 namespace IngameScript
 {
@@ -26,8 +27,36 @@ namespace IngameScript
                 return GetDisplayDrivers(factory);
             else if (typeof(T) == typeof(IMyShipController))
                 return GetInputDrivers(factory);
+            else if  (typeof(T) == typeof(IMyThrust))
+                return GetThrustDrivers(factory);
             
             throw new Exception($"Type '{typeof(T).Name}' is not supported");
+        }
+
+        private List<IGridDriver> GetThrustDrivers<T>(Func<IEnrichedComponent<T>, IGridDriver> factory)
+        {
+           List<IMyThrust> thrusts = new List<IMyThrust>();
+           _gridTerminalSystem.GetBlocksOfType(thrusts);
+           
+           List<IGridDriver> result = new List<IGridDriver>();
+           foreach (IMyThrust thrust in thrusts)
+           {
+               Ini.TryParse(thrust.CustomData);
+               String direction = "none";
+               if (!Ini.ContainsSection("GridOS") || Ini.ContainsKey("GridOS", "direction"))
+               {
+                   Ini.Set("GridOS", "direction", "none");
+               }
+               else
+               {
+                  direction = Ini.Get("GridOS", "direction").ToString();
+               }
+
+               IEnrichedComponent<T> enrichedThrust = new EnrichedThrust(thrust, direction) as IEnrichedComponent<T>;
+               result.Add(factory(enrichedThrust));
+           }
+           
+           return result;
         }
 
         private List<IGridDriver> GetInputDrivers<T>(Func<IEnrichedComponent<T>,IGridDriver> factory)

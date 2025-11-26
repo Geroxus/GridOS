@@ -48,6 +48,8 @@ namespace IngameScript
                 }
             }
             
+            // get max force per direction
+            
             Info = _builder.ToString();
             _builder.Clear();
         }

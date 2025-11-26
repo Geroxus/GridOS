@@ -30,6 +30,15 @@ namespace IngameScript
                     return new InputDriver(shipController, ProcessIdProvider.Next(typeof(IGridDriver)),
                         $"InputDriver[[{enrichedComponent.Name}]]");
                 }
+            } else if (enrichedComponent.Component is IMyThrust)
+            {
+                IMyThrust thrust = enrichedComponent.Component as IMyThrust;
+                if (!OsProcessBridge.Instance.GetDrivers(typeof(ThrustDriver))
+                        .Any(d => d.Name.Contains(enrichedComponent.Name)))
+                {
+                   return new ThrustDriver(thrust, ProcessIdProvider.Next(typeof(IGridDriver)),
+                       $"ThrustDriver[[{enrichedComponent.Name}]]", ((EnrichedThrust)enrichedComponent).GetDirection());
+                }
             }
 
             throw new Exception("not implemented");
