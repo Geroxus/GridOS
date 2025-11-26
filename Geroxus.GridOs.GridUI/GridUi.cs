@@ -25,7 +25,9 @@ namespace IngameScript
 
             write(Environment.NewLine);
             write("Running Processes:");
-            _processBridge.GetAllProcesses().ForEach(p => write($"{p.ProcessId.Id, 6}: {p.Name}"));
+            _processBridge.GetAllProcesses()
+                .Where(p => p.ProcessId.Id < 90000).ToList()
+                .ForEach(p => write($"{p.ProcessId.Id, 6}: {p.Name}"));
         }
 
         public void Dispose()
