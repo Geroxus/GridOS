@@ -16,6 +16,8 @@ namespace IngameScript
         /// Should not be used under any circumstances and is scheduled to be made private.
         public IMyShipController Component { get; set; }
 
+        public bool IsControlled => Component.IsUnderControl;
+
         public void Dispose()
         {
         }

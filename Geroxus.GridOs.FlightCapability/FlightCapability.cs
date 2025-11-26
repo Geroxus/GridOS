@@ -31,14 +31,14 @@ namespace IngameScript
         private readonly StringBuilder _builder = new StringBuilder();
         public void Run()
         {
-            _builder.AppendLine("FlightCapability running...");
+            _builder.AppendLine("Flight Capability Observer:");
             InputDriver[] inputDrivers = OsProcessBridge.Instance.GetDrivers(typeof(InputDriver)).OfType<InputDriver>().ToArray();
+            List<InputDriver> controlledInput = inputDrivers.Where(d => d.IsControlled).ToList();
             if (inputDrivers.Any(d => d.Component.GetNaturalGravity().Equals(Vector3.Zero)))
                 _builder.AppendLine("Currently in space");
             else
             {
-                _builder.AppendLine("NOT IMPLEMENTED");
-                foreach (InputDriver inputDriver in inputDrivers)
+                foreach (InputDriver inputDriver in controlledInput)
                 {
                     Vector3D naturalGravity = inputDriver.Component.GetNaturalGravity();
                     MyShipMass shipMass = inputDriver.Component.CalculateShipMass();
