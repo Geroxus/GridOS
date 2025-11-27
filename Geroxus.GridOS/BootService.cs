@@ -26,13 +26,13 @@ namespace IngameScript
             Grid.Get<IMyTextSurface>(DriverFactory.Get).ForEach(Processes.Register);
             Grid.Get<IMyShipController>(DriverFactory.Get).ForEach(Processes.Register);
             Grid.Get<IMyThrust>(DriverFactory.Get).ForEach(Processes.Register);
-            LOGGER.Write("Driver registration complete");
+            LOGGER.Info("Driver registration complete");
 
             Processes.Register(ProgramFactory.Get<GridUi>());
             Processes.Register(ProgramFactory.Get<FlightCapability>());
 
             // displaying stuff
-            LOGGER.Write("Boot finished, Stop Booting");
+            LOGGER.Info("Boot finished, Stop Booting");
             Processes.RegisterStop(ProcessId);
         }
 

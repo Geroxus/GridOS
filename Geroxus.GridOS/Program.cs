@@ -22,7 +22,7 @@ namespace IngameScript
 {
     public partial class Program : MyGridProgram
     {
-        private static readonly DateTime  BuildDate = new DateTime(2025, 4, 23);
+        private static readonly DateTime  BuildDate = new DateTime(2025, 11, 27);
         
         private readonly GridOs _os;
 
@@ -36,6 +36,7 @@ namespace IngameScript
             LOGGER.RegisterOutput(s => Echo(s));
 
             _os.Version = $"0.1-beta-{BuildDate.Date.ToShortDateString()}";
+            LOGGER.Always($"Welcome to Grid Os Version v{_os.Version}!");
         }
 
         public void Save()
@@ -44,7 +45,22 @@ namespace IngameScript
 
         public void Main(string argument, UpdateType updateSource)
         {
-            _os.Operate();
+            switch (updateSource)
+            {
+                case UpdateType.Once:
+                    if (argument.Contains("-log"))
+                    {
+                       LOGGER.SetLogLevelInfo(); 
+                    }
+                    else
+                    {
+                        LOGGER.DisableLogging();
+                    }
+                    break;
+                case UpdateType.Update10:
+                    _os.Operate();
+                    break;
+            }
         }
     }
 }

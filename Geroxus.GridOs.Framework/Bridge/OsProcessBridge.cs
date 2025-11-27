@@ -54,7 +54,7 @@ namespace IngameScript
             
             if (_processesForTermination.Count == 0) return;
             var processId = _processesForTermination.Dequeue();
-            LOGGER.Write($"Stopping [[{processId}]]");
+            LOGGER.Info($"Stopping [[{processId}]]");
             Stop(processId);
         }
 
@@ -65,12 +65,12 @@ namespace IngameScript
 
         private void Stop(ProcessId processId)
         {
-            LOGGER.Write("Stop in Process: " + processId);
+            LOGGER.Info("Stop in Process: " + processId);
             List<IGridOsProcess> gridOsProcesses = GetAllProcesses().Where(p => p.ProcessId.Equals(processId)).ToList();
             if (gridOsProcesses.Count() != 1) return;
             IGridOsProcess processToDispose = gridOsProcesses.Single();
             
-            LOGGER.Write("Stop in Process: " + processToDispose.Name);
+            LOGGER.Info("Stop in Process: " + processToDispose.Name);
             processToDispose.Dispose();
             _processes.Remove(processToDispose.ProcessId);
         }

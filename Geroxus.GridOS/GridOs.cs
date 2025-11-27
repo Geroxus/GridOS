@@ -39,13 +39,13 @@ namespace IngameScript
 
         public void Operate()
         {
-            LOGGER.Write($"Operating v{Version}");
+            LOGGER.Info($"Operating v{Version}");
             foreach (IGridOsProcess process in Processes.Values)
             {
-                LOGGER.Write($"Process: {process.GetType().Name} : {process.Name}");
+                LOGGER.Info($"Process: {process.GetType().Name} : {process.Name}");
                 process.Run();
             }
-            LOGGER.Write("Cleanup Operator");
+            LOGGER.Info("Cleanup Operator");
             ProcessBridge.Run();
         }
     }
