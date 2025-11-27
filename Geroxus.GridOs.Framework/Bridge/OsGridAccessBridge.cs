@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Sandbox.ModAPI.Ingame;
 using VRage;
@@ -95,10 +96,27 @@ namespace IngameScript
                 for (int i = 0; i < surfaceCount; i++)
                 {
                     bool loadDisplay = false;
+                    // this is for backwards compatibility with April 2025 builds
                     if (Ini.ContainsKey("GridOS", i.ToString()))
+                    {
                         loadDisplay |= Ini.Get("GridOS", i.ToString()).ToBoolean();
+                        Ini.Delete("GridOS", i.ToString());
+                    }
+                    
+                    string section = $"GridOS.Display.{i.ToString()}";
+                    if (Ini.ContainsSection(section) && Ini.ContainsKey(section, "enabled"))
+                    {
+                        loadDisplay |= Ini.Get(section, "enabled").ToBoolean();
+                        GridProgram program;
+                        string programName = Ini.Get(section, "program").ToString();
+                        if (!Enum.TryParse<GridProgram>(programName, out program))
+                            throw new Exception($"No program found on {myTerminalBlock.DisplayNameText} with name {programName}");
+                    }
                     else
-                        Ini.Set("GridOS", i.ToString(), false);
+                    {
+                        Ini.Set(section, "enabled", loadDisplay);
+                        Ini.Set(section, "program", "NONE");
+                    }
 
                     if (loadDisplay)
                     {

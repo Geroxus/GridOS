@@ -1,6 +1,7 @@
 using System.Text;
 using Sandbox.ModAPI.Ingame;
 using VRage.Game.GUI.TextPanel;
+using VRage.Game.ModAPI.Ingame.Utilities;
 
 namespace IngameScript
 {
@@ -13,6 +14,7 @@ namespace IngameScript
         private readonly IMyTextSurface _component;
         
         private StringBuilder DisplayText { get; } = new StringBuilder();
+        public GridProgram Program { get; }
 
         public DisplayDriver(IMyTextSurface component, ProcessId processId, string name)
         {
