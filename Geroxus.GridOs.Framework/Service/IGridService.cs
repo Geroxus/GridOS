@@ -2,6 +2,9 @@ namespace IngameScript
 {
     public interface IGridService : IGridOsProcess
     {
-        string Info { get; }
+    }
+    public interface IGridService<out TInfo> : IGridService
+    {
+        TInfo Info { get; }
     }
 }

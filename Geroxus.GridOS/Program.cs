@@ -22,7 +22,6 @@ namespace IngameScript
 {
     public partial class Program : MyGridProgram
     {
-        private static readonly DateTime  BuildDate = new DateTime(2025, 11, 27);
         
         private readonly GridOs _os;
 
@@ -37,8 +36,7 @@ namespace IngameScript
             _os = GridOs.BootStrap(GridTerminalSystem);
             LOGGER.RegisterOutput(s => Echo(s));
 
-            _os.Version = $"0.1-beta-{BuildDate.Date.ToShortDateString()}";
-            LOGGER.Always($"Welcome to Grid Os Version v{_os.Version}!");
+            LOGGER.Always($"Welcome to Grid Os Version v{_os.VersionString}!");
         }
 
         public void Save()

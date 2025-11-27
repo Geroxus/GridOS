@@ -9,7 +9,9 @@ namespace IngameScript
         private Dictionary<ProcessId, IGridOsProcess> Processes { get; } = new Dictionary<ProcessId, IGridOsProcess>();
         private OsProcessBridge ProcessBridge { get; } = OsProcessBridge.Instance;
 
-        public string Version { get; set; }
+        private static readonly DateTime  BuildDate = new DateTime(2025, 11, 27);
+        public static string Version { get; } = $"0.1-beta-{BuildDate.Date.ToShortDateString()}";
+        public string VersionString => Version;
 
         public static GridOs BootStrap(
             IMyGridTerminalSystem gridTerminalSystem,

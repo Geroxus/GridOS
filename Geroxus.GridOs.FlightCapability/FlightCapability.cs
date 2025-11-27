@@ -7,9 +7,9 @@ using VRageMath;
 
 namespace IngameScript
 {
-    public class FlightCapability : IGridService
+    public class FlightCapability : IGridService<FlightCapabilityInfo>
     {
-        public string Info { get; private set; }
+        public FlightCapabilityInfo Info { get; private set; }
         
         public FlightCapability(ProcessId processId, string name)
         {
@@ -32,11 +32,12 @@ namespace IngameScript
         private readonly StringBuilder _builder = new StringBuilder();
         private Dictionary<Vector3I, float> _maxThrustPerDirection;
         private float _forceOnShip = 0;
-        private GridOsPlanet _selectedPlanet = new GridOsPlanet("Mars", 9.80665F * 0.9F);
+        private GridOsPlanet _selectedPlanet = new GridOsPlanet("Mars", new PhysicsValue<float>(PhysicsUnit.NewtonPerKilogram, 9.80665F * 0.9F));
 
         public void Run()
         {
             _builder.AppendLine("Flight Capability Observer:");
+            FlightCapabilityInfo info = new FlightCapabilityInfo();
             InputDriver[] inputDrivers = OsProcessBridge.Instance.GetDrivers(typeof(InputDriver)).OfType<InputDriver>().ToArray();
             List<InputDriver> controlledInput = inputDrivers.Where(d => d.IsControlled).ToList();
             if (inputDrivers.Any(d => d.Component.GetNaturalGravity().Equals(Vector3.Zero)))
@@ -48,26 +49,26 @@ namespace IngameScript
                 {
                     Vector3D naturalGravity = inputDriver.Component.GetNaturalGravity();
                     MyShipMass shipMass = inputDriver.Component.CalculateShipMass();
-                    _builder.AppendLine($"{inputDriver.Name}:");
-                    _builder.AppendLine($"Gravity: {naturalGravity.Length()}");
-                    _builder.AppendLine($"Mass: {shipMass.TotalMass}kg({shipMass.BaseMass}kg)");
                     _builder.AppendLine($"Down: {_maxThrustPerDirection[Vector3I.Up]/1000}kN, Backward: {_maxThrustPerDirection[Vector3I.Forward]/1000}kN, Left: {_maxThrustPerDirection[Vector3I.Right]/1000}kN");
                     _builder.AppendLine($"Up: {_maxThrustPerDirection[Vector3I.Down]/1000}kN, Forward: {_maxThrustPerDirection[Vector3I.Backward]/1000}kN, Right: {_maxThrustPerDirection[Vector3I.Left]/1000}kN");
                     _forceOnShip = (float)((double)shipMass.PhysicalMass * naturalGravity.Length());
-                    _builder.AppendLine($"Force on ship: {_forceOnShip/1000}kN  Can sustain flight: {(CanSustainFlight()? "yes" : "no")}");
-                    _builder.AppendLine($"Safe to land on {_selectedPlanet.Name}({_selectedPlanet.Gravity :F2}N/kg)? {(CanSustainFlight(shipMass, _selectedPlanet) ? "yes" : "no")}");
+                    _builder.AppendLine($"Safe to land on {_selectedPlanet.Name}({_selectedPlanet.Gravity.Value :F2}N/kg)? {(CanSustainFlight(shipMass, _selectedPlanet) ? "yes" : "no")}");
+                    
+                    info.ShipMass = new PhysicsValue<float>(PhysicsUnit.Kilogram, shipMass.PhysicalMass);
+                    info.ShipGravity = new PhysicsValue<float>(PhysicsUnit.Newton, _forceOnShip);
+                    info.NaturalGravity = new PhysicsValue<float>(PhysicsUnit.NewtonPerKilogram, (float)naturalGravity.Length());
+                    info.CurrentFlightSustain = new FlightSustain(CanSustainFlight());
+                    info.TargetFlightSustain = new FlightSustain(CanSustainFlight(shipMass, _selectedPlanet), _selectedPlanet);
                 }
             }
-            
-            // get max force per direction
-            
-            Info = _builder.ToString();
+
+            Info = info;
             _builder.Clear();
         }
 
         private bool CanSustainFlight(MyShipMass shipMass, GridOsPlanet planet)
         {
-            return shipMass.PhysicalMass * planet.Gravity < _maxThrustPerDirection.Values.Max();
+            return shipMass.PhysicalMass * planet.Gravity.Value < _maxThrustPerDirection.Values.Max();
         }
 
         private bool CanSustainFlight()
@@ -99,15 +100,42 @@ namespace IngameScript
         }
     }
 
-    internal struct GridOsPlanet
+    public struct FlightSustain
+    {
+        public FlightSustain(bool canSustainFlight, GridOsPlanet? target = null)
+        {
+            CanSustainFlight =  canSustainFlight;
+            Target = target;
+        }
+
+        /**
+         * Can be null. Indicates that this is calculated with regard to currently applied natural gravity
+         */
+        public GridOsPlanet? Target { get; set; }
+
+        public bool CanSustainFlight { get; set; }
+    }
+
+    public struct GridOsPlanet
     {
         public readonly String Name;
-        public readonly float Gravity;
+        public readonly PhysicsValue<float> Gravity;
 
-        public GridOsPlanet(string name, float gravity)
+        public GridOsPlanet(string name, PhysicsValue<float> gravity)
         {
             Name = name;
             Gravity = gravity;
         }
+    }
+
+    public struct FlightCapabilityInfo
+    {
+        public PhysicsValue<float> ShipMass { get; set; }
+        public PhysicsValue<float> ShipGravity { get; set; }
+        public PhysicsValue<float> NaturalGravity { get; set; }
+        public Dictionary<Vector3I, PhysicsValue<float>> MaxThrustPerDirection { get; set; }
+        public Dictionary<Vector3I, PhysicsValue<float>> ThrustPerDirection { get; set; }
+        public FlightSustain CurrentFlightSustain { get; set; }
+        public FlightSustain TargetFlightSustain { get; set; }
     }
 }

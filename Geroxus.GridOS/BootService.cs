@@ -4,7 +4,7 @@ using Sandbox.ModAPI.Ingame;
 
 namespace IngameScript
 {
-    public class BootService : IGridService
+    public class BootService : IGridService<string>
     {
         public string Name { get; }
         public ProcessId ProcessId { get; }

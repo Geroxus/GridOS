@@ -20,8 +20,7 @@ namespace IngameScript
 
         public void Run()
         {
-            foreach (string info in _processBridge.GetServices().Select(s => s.Info)) _write(info);
-
+            _write($"Welcome to GridOS v{GridOs.Version}");
             _write(Environment.NewLine);
 
         }

@@ -10,18 +10,20 @@ namespace IngameScript
     {
         public string Name { get; }
         public ProcessId ProcessId { get; }
-        
+        public GridProgram Program { get; }
+        public string Settings { get; }
         
         private readonly IMyTextSurface _component;
         private string _lastContent = String.Empty;
 
         private StringBuilder DisplayText { get; } = new StringBuilder();
-        public GridProgram Program { get; }
+
 
         public DisplayDriver(EnrichedTextSurface surface, ProcessId processId, string name)
         {
             _component = surface.Component;
             Program = surface.Program;
+            Settings = surface.Settings;
 
             _component.ContentType = ContentType.TEXT_AND_IMAGE;
             _component.WriteText("");
