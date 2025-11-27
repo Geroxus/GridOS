@@ -51,6 +51,7 @@ namespace IngameScript
                {
                   direction = Ini.Get("GridOS", "direction").ToString();
                }
+               thrust.CustomData = Ini.ToString();
 
                IEnrichedComponent<T> enrichedThrust = new EnrichedThrust(thrust, direction) as IEnrichedComponent<T>;
                result.Add(factory(enrichedThrust));

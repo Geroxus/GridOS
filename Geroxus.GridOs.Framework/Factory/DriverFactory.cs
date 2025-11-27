@@ -19,8 +19,6 @@ namespace IngameScript
                     return new DisplayDriver(textSurface, ProcessIdProvider.Next(typeof(IGridDriver)),
                         $"DisplayDriver[[{enrichedComponent.Name}]]");
                 }
-
-                return (DisplayDriver)null;
             } else if (enrichedComponent.Component is IMyShipController)
             {
                 IMyShipController shipController = enrichedComponent.Component as IMyShipController;

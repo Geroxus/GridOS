@@ -31,6 +31,8 @@ namespace IngameScript
 
         private readonly StringBuilder _builder = new StringBuilder();
         private Dictionary<Vector3I, float> _maxThrustPerDirection;
+        private float _forceOnShip = 0;
+        private GridOsPlanet _selectedPlanet = new GridOsPlanet("Mars", 9.80665F * 0.9F);
 
         public void Run()
         {
@@ -41,6 +43,7 @@ namespace IngameScript
                 _builder.AppendLine("Currently in space");
             else
             {
+                // TODO this produces weird outputs when two controllers are present. Fix it
                 foreach (InputDriver inputDriver in controlledInput)
                 {
                     Vector3D naturalGravity = inputDriver.Component.GetNaturalGravity();
@@ -48,8 +51,11 @@ namespace IngameScript
                     _builder.AppendLine($"{inputDriver.Name}:");
                     _builder.AppendLine($"Gravity: {naturalGravity.Length()}");
                     _builder.AppendLine($"Mass: {shipMass.TotalMass}kg({shipMass.BaseMass}kg)");
-                    _builder.AppendLine($"Down: {_maxThrustPerDirection[Vector3I.Up]/1000}, Backward: {_maxThrustPerDirection[Vector3I.Forward]/1000}, Left: {_maxThrustPerDirection[Vector3I.Right]/1000}");
-                    _builder.AppendLine($"Up: {_maxThrustPerDirection[Vector3I.Down]/1000}, Forward: {_maxThrustPerDirection[Vector3I.Backward]/1000}, Right: {_maxThrustPerDirection[Vector3I.Left]/1000}");
+                    _builder.AppendLine($"Down: {_maxThrustPerDirection[Vector3I.Up]/1000}kN, Backward: {_maxThrustPerDirection[Vector3I.Forward]/1000}kN, Left: {_maxThrustPerDirection[Vector3I.Right]/1000}kN");
+                    _builder.AppendLine($"Up: {_maxThrustPerDirection[Vector3I.Down]/1000}kN, Forward: {_maxThrustPerDirection[Vector3I.Backward]/1000}kN, Right: {_maxThrustPerDirection[Vector3I.Left]/1000}kN");
+                    _forceOnShip = (float)((double)shipMass.PhysicalMass * naturalGravity.Length());
+                    _builder.AppendLine($"Force on ship: {_forceOnShip/1000}kN  Can sustain flight: {(CanSustainFlight()? "yes" : "no")}");
+                    _builder.AppendLine($"Safe to land on {_selectedPlanet.Name}({_selectedPlanet.Gravity :F2}N/kg)? {(CanSustainFlight(shipMass, _selectedPlanet) ? "yes" : "no")}");
                 }
             }
             
@@ -57,6 +63,16 @@ namespace IngameScript
             
             Info = _builder.ToString();
             _builder.Clear();
+        }
+
+        private bool CanSustainFlight(MyShipMass shipMass, GridOsPlanet planet)
+        {
+            return shipMass.PhysicalMass * planet.Gravity < _maxThrustPerDirection.Values.Max();
+        }
+
+        private bool CanSustainFlight()
+        {
+            return _forceOnShip < _maxThrustPerDirection.Values.Max();
         }
 
         public void SetUp()
@@ -80,6 +96,18 @@ namespace IngameScript
                 thrustPerDirection[thrustDriver.Direction] = thrust;
             }
             return thrustPerDirection;
+        }
+    }
+
+    internal struct GridOsPlanet
+    {
+        public readonly String Name;
+        public readonly float Gravity;
+
+        public GridOsPlanet(string name, float gravity)
+        {
+            Name = name;
+            Gravity = gravity;
         }
     }
 }
