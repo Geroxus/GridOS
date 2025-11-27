@@ -23,9 +23,6 @@ namespace IngameScript
             // register services
             if(bootServiceFactory == null) bootServiceFactory = new BootServiceFactory();
             ProgramFactory.Register(bootServiceFactory);
-            
-            if(gridUiFactory == null) gridUiFactory = new GridUiFactory();
-            ProgramFactory.Register(gridUiFactory);
 
             return new GridOs();
         }

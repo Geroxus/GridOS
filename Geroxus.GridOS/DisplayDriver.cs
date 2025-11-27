@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using Sandbox.ModAPI.Ingame;
 using VRage.Game.GUI.TextPanel;
@@ -12,13 +13,15 @@ namespace IngameScript
         
         
         private readonly IMyTextSurface _component;
-        
+        private string _lastContent = String.Empty;
+
         private StringBuilder DisplayText { get; } = new StringBuilder();
         public GridProgram Program { get; }
 
-        public DisplayDriver(IMyTextSurface component, ProcessId processId, string name)
+        public DisplayDriver(EnrichedTextSurface surface, ProcessId processId, string name)
         {
-            _component = component;
+            _component = surface.Component;
+            Program = surface.Program;
 
             _component.ContentType = ContentType.TEXT_AND_IMAGE;
             _component.WriteText("");
@@ -29,9 +32,28 @@ namespace IngameScript
 
         public void Run()
         {
-            _component.WriteText(DisplayText);
+            switch (Program)
+            {
+                case GridProgram.NONE:
+                    _component.WriteText(DisplayText);
+                    DisplayText.Clear();
+                    break;
+                case GridProgram.LiveStats:
+                    CheckBeforeUpdate();
+                    break;
+            }
+        }
+
+        private void CheckBeforeUpdate()
+        {
+            if (!DisplayText.ToString().Equals(_lastContent))
+            {
+               _component.WriteText(DisplayText);
+               _lastContent = DisplayText.ToString();
+            } 
             DisplayText.Clear();
         }
+        
 
         public void SetUp()
         {

@@ -12,11 +12,11 @@ namespace IngameScript
         {
             if (enrichedComponent.Component is IMyTextSurface)
             {
-                IMyTextSurface textSurface = enrichedComponent.Component as IMyTextSurface;
                 if (!OsProcessBridge.Instance.GetDrivers(typeof(DisplayDriver))
                         .Any(d => d.Name.Contains(enrichedComponent.Name)))
                 {
-                    return new DisplayDriver(textSurface, ProcessIdProvider.Next(typeof(IGridDriver)),
+                    EnrichedTextSurface surface = enrichedComponent as EnrichedTextSurface;
+                    return new DisplayDriver(surface, ProcessIdProvider.Next(typeof(IGridDriver)),
                         $"DisplayDriver[[{enrichedComponent.Name}]]");
                 }
             } else if (enrichedComponent.Component is IMyShipController)

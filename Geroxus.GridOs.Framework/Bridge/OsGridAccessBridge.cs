@@ -104,10 +104,10 @@ namespace IngameScript
                     }
                     
                     string section = $"GridOS.Display.{i.ToString()}";
+                    GridProgram program = GridProgram.NONE;
                     if (Ini.ContainsSection(section) && Ini.ContainsKey(section, "enabled"))
                     {
                         loadDisplay |= Ini.Get(section, "enabled").ToBoolean();
-                        GridProgram program;
                         string programName = Ini.Get(section, "program").ToString();
                         if (!Enum.TryParse<GridProgram>(programName, out program))
                             throw new Exception($"No program found on {myTerminalBlock.DisplayNameText} with name {programName}");
@@ -122,7 +122,7 @@ namespace IngameScript
                     {
                         IMyTextSurface myTextSurface = myTextSurfaceProvider.GetSurface(i);
                         IEnrichedComponent<T> enrichedTextSurface =
-                            new EnrichedTextSurface(myTextSurface, $"{myTerminalBlock.DisplayNameText}:{i}") as
+                            new EnrichedTextSurface(myTextSurface, $"{myTerminalBlock.DisplayNameText}:{i}", program) as
                                 IEnrichedComponent<T>;
                         result.Add(factory(enrichedTextSurface));
                     }

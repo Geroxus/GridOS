@@ -28,8 +28,10 @@ namespace IngameScript
             Grid.Get<IMyThrust>(DriverFactory.Get).ForEach(Processes.Register);
             LOGGER.Info("Driver registration complete");
 
-            Processes.Register(ProgramFactory.Get<GridUi>());
             Processes.Register(ProgramFactory.Get<FlightCapability>());
+            
+            Processes.Register(ProgramFactory.Get<LiveStats>());
+            Processes.Register(ProgramFactory.Get<GridUi>());
 
             // displaying stuff
             LOGGER.Info("Boot finished, Stop Booting");

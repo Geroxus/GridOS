@@ -31,7 +31,15 @@ namespace IngameScript
 
         public void SetUp()
         {
-            _write = text => _processBridge.GetDrivers(typeof(DisplayDriver)).ForEach(d => (d as DisplayDriver)?.AppendLine(text));
+            _write = text => _processBridge.GetDrivers(typeof(DisplayDriver))
+                .Where(d => (d as DisplayDriver)?.Program == GridProgram.NONE)
+                .ToList()
+                .ForEach(d => (d as DisplayDriver)?.AppendLine(text));
+        }
+
+        public static void Register()
+        {
+           ProgramFactory.Register(new GridUiFactory()); 
         }
 
         public void Dispose()
