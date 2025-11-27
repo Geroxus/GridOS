@@ -23,10 +23,7 @@ namespace IngameScript
             foreach (string info in _processBridge.GetServices().Select(s => s.Info)) _write(info);
 
             _write(Environment.NewLine);
-            _write("Running Processes:");
-            _processBridge.GetAllProcesses()
-                .Where(p => p.ProcessId.Id < 90000).ToList()
-                .ForEach(p => _write($"{p.ProcessId.Id, 6}: {p.Name}"));
+
         }
 
         public void SetUp()

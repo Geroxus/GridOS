@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 
 namespace IngameScript
 {
@@ -32,6 +33,11 @@ namespace IngameScript
             foreach (DisplayDriver display in _displays)
             {
                 display.AppendLine("Welcome to LiveStats! Here you'll soon find the stats. Live! Wow!");
+                display.AppendLine("Running Processes:");
+                OsProcessBridge.Instance.GetAllProcesses()
+                    // .Where(p => p.ProcessId.Id < 90000).ToList()
+                    .Sort((p1, p2) => p1.ProcessId.Id < p2.ProcessId.Id ? -1 : 1)
+                    .ForEach(p => display.AppendLine($"{p.ProcessId.Id, 6 :N0}: {p.Name}"));
             }
         }
 
