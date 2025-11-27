@@ -19,6 +19,10 @@ namespace IngameScript
 
         public void Run()
         {
+        }
+
+        public void SetUp()
+        {
             Grid.Get<IMyTextSurface>(DriverFactory.Get).ForEach(Processes.Register);
             Grid.Get<IMyShipController>(DriverFactory.Get).ForEach(Processes.Register);
             Grid.Get<IMyThrust>(DriverFactory.Get).ForEach(Processes.Register);

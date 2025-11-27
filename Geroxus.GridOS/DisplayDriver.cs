@@ -31,6 +31,10 @@ namespace IngameScript
             DisplayText.Clear();
         }
 
+        public void SetUp()
+        {
+        }
+
         public void Dispose()
         {
             // TODO release managed resources here

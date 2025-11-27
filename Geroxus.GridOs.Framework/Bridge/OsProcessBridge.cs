@@ -48,6 +48,7 @@ namespace IngameScript
             while (_processesToRegister.Count > 0)
             {
                 var process = _processesToRegister.Dequeue();
+                process.SetUp();
                 _processes.Add(process.ProcessId, process);
             }
             

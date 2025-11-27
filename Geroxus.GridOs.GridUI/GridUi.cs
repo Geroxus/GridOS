@@ -6,6 +6,7 @@ namespace IngameScript
     public class GridUi : IGridUi
     {
         private readonly OsProcessBridge _processBridge = OsProcessBridge.Instance;
+        private Action<string> _write;
 
         public GridUi(ProcessId processId, string name)
         {
@@ -19,15 +20,18 @@ namespace IngameScript
 
         public void Run()
         {
-            Action<string> write = text => _processBridge.GetDrivers(typeof(DisplayDriver)).ForEach(d => (d as DisplayDriver)?.AppendLine(text));
-            
-            foreach (string info in _processBridge.GetServices().Select(s => s.Info)) write(info);
+            foreach (string info in _processBridge.GetServices().Select(s => s.Info)) _write(info);
 
-            write(Environment.NewLine);
-            write("Running Processes:");
+            _write(Environment.NewLine);
+            _write("Running Processes:");
             _processBridge.GetAllProcesses()
                 .Where(p => p.ProcessId.Id < 90000).ToList()
-                .ForEach(p => write($"{p.ProcessId.Id, 6}: {p.Name}"));
+                .ForEach(p => _write($"{p.ProcessId.Id, 6}: {p.Name}"));
+        }
+
+        public void SetUp()
+        {
+            _write = text => _processBridge.GetDrivers(typeof(DisplayDriver)).ForEach(d => (d as DisplayDriver)?.AppendLine(text));
         }
 
         public void Dispose()

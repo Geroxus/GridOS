@@ -28,5 +28,9 @@ namespace IngameScript
         {
             
         }
+
+        public void SetUp()
+        {
+        }
     }
 }

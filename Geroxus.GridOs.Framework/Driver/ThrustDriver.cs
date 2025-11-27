@@ -34,5 +34,9 @@ namespace IngameScript
         public void Run()
         {
         }
+
+        public void SetUp()
+        {
+        }
     }
 }
