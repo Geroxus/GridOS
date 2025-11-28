@@ -26,5 +26,6 @@
     <Import Project="..\Geroxus.GridOs.Framework\Geroxus.GridOs.Framework.projitems" Label="Shared" />
     <Import Project="..\Geroxus.GridOs.GridUI\Geroxus.GridOs.GridUI.projitems" Label="Shared" />
     <Import Project="..\Geroxus.GridOs.FlightCapability\Geroxus.GridOs.FlightCapability.projitems" Label="Shared" />
+    <Import Project="..\Geroxus.GridOs.DoorService\Geroxus.GridOs.DoorService.projitems" Label="Shared" />
     <Import Project="..\Geroxus.GridOS.LiveStats/Geroxus.GridOS.LiveStats.projitems" Label="Shared" />
 </Project>

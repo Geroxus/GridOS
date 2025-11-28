@@ -10,6 +10,10 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Geroxus.GridOs.FlightCapabi
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Geroxus.GridOS.LiveStats", "Geroxus.GridOS.LiveStats\Geroxus.GridOS.LiveStats.shproj", "{8A3CDCC5-4B55-4D87-A415-698A0E1FF06F}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Geroxus.GridOs.DoorService", "Geroxus.GridOs.DoorService\Geroxus.GridOs.DoorService.shproj", "{8A3CDCC5-4B55-4D87-A415-698A0E1FF06F}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Geroxus.GridOs.PersistentAccelarationService", "Geroxus.GridOs.PersistentAccelarationService\Geroxus.GridOs.PersistentAccelarationService.shproj", "{8A3CDCC5-4B55-4D87-A415-698A0E1FF06F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
