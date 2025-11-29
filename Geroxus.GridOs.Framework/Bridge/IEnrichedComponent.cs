@@ -1,8 +1,11 @@
 namespace IngameScript
 {
-    public interface IEnrichedComponent<T>
+    public interface IEnrichedComponent
+    {
+        string Name { get; }
+    }
+    public interface IEnrichedComponent<T> : IEnrichedComponent
     {
         T Component { get; }
-        string Name { get; }
     }
 }

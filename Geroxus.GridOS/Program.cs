@@ -29,10 +29,6 @@ namespace IngameScript
         {
             Runtime.UpdateFrequency = UpdateFrequency.Update10;
             
-            FlightCapability.Register();
-            GridUi.Register();
-            LiveStats.Register();
-
             _os = GridOs.BootStrap(GridTerminalSystem);
             LOGGER.RegisterOutput(s => Echo(s));
 

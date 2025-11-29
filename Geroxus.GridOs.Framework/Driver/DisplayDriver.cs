@@ -6,33 +6,17 @@ using VRage.Game.ModAPI.Ingame.Utilities;
 
 namespace IngameScript
 {
-    public class DisplayDriver : IDisplayDriver
+    public class DisplayDriver : GridDriverBase<EnrichedTextSurface>
     {
-        public string Name { get; }
-        public ProcessId ProcessId { get; }
-        public GridProgram Program { get; }
-        public string Settings { get; }
+        public GridProgram Program { get; private set; }
+        public string Settings { get; private set; }
         
-        private readonly IMyTextSurface _component;
+        private IMyTextSurface _component;
         private string _lastContent = String.Empty;
 
         private StringBuilder DisplayText { get; } = new StringBuilder();
 
-
-        public DisplayDriver(EnrichedTextSurface surface, ProcessId processId, string name)
-        {
-            _component = surface.Component;
-            Program = surface.Program;
-            Settings = surface.Settings;
-
-            _component.ContentType = ContentType.TEXT_AND_IMAGE;
-            _component.WriteText("");
-            
-            Name = name;
-            ProcessId = processId;
-        }
-
-        public void Run()
+        public override void Run()
         {
             switch (Program)
             {
@@ -57,13 +41,14 @@ namespace IngameScript
         }
         
 
-        public void SetUp()
+        public override void SetUp()
         {
-        }
+            Program = Component.Program;
+            Settings = Component.Settings;
+            _component = Component.Component;
 
-        public void Dispose()
-        {
-            // TODO release managed resources here
+            _component.ContentType = ContentType.TEXT_AND_IMAGE;
+            _component.WriteText("");
         }
 
         public void AppendLine(string text)

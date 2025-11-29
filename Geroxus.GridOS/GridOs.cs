@@ -14,17 +14,11 @@ namespace IngameScript
         public string VersionString => Version;
 
         public static GridOs BootStrap(
-            IMyGridTerminalSystem gridTerminalSystem,
-            IProcessFactory<BootService> bootServiceFactory = null,
-            IProcessFactory<IGridUi> gridUiFactory = null
+            IMyGridTerminalSystem gridTerminalSystem
             )
         {
             // configure and setup bridges
             OsGridAccessBridge.Instance.RegisterGridTerminalSystem(gridTerminalSystem);
-
-            // register services
-            if(bootServiceFactory == null) bootServiceFactory = new BootServiceFactory();
-            ProgramFactory.Register(bootServiceFactory);
 
             return new GridOs();
         }
@@ -33,7 +27,7 @@ namespace IngameScript
         {
             OsProcessBridge.Instance.RegisterProcessLists(Processes);
             
-            ProcessBridge.Register(ProgramFactory.Get<BootService>());
+            ProcessBridge.Register(ProgramFactory.Create<BootService>());
         }
 
         public void Operate()

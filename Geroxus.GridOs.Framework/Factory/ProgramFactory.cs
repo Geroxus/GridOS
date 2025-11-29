@@ -19,6 +19,16 @@ namespace IngameScript
             throw new Exception($"No factory registered for type {typeof(T).Name}");
         }
 
+        public static IGridOsProcess Create<T>() where T : IGridOsProcess, new()
+        {
+            if (typeof(T) == typeof(IGridDriver))
+                throw new Exception("Cannot create a driver from ProgramFactory. Use DriverFactory instead.");
+            T  process = new T();
+            string name = typeof(T).ToString();
+            process.Initialize(ProcessIdProvider, name);
+            return process;
+        }
+
         public static void Register(IProcessFactory<IGridOsProcess> processFactory)
         {
             Factories.Add(processFactory.ProcessName, processFactory);

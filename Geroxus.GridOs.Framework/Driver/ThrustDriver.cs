@@ -3,40 +3,28 @@ using VRageMath;
 
 namespace IngameScript
 {
-    public class ThrustDriver : IGridDriver
+    public class ThrustDriver : GridDriverBase<EnrichedThrust>
     {
-        private readonly IMyThrust _thrust;
-        private readonly Vector3I _assumedDirection;
-        private readonly Vector3I? _setDirection = null;
-
-        public ThrustDriver(IMyThrust thrust, ProcessId processId, string name, Vector3I setDirection)
-        {
-            Name = name;
-            ProcessId = processId;
-            
-            _thrust = thrust;
-            // last known direction of this thruster. Needs an active cockpit to be set
-            _assumedDirection = _thrust.GridThrustDirection;
-            if (setDirection != Vector3I.Zero)
-                _setDirection = setDirection;
-        }
+        private IMyThrust _thrust;
+        private Vector3I _assumedDirection;
+        private Vector3I? _setDirection = null;
         
         public Vector3I Direction => _setDirection ?? _assumedDirection;
 
         public float MaxThrust => _thrust.MaxThrust;
         public float CurrentThrust => _thrust.CurrentThrust;
         
-        public string Name { get; }
-        public ProcessId ProcessId { get; }
-        public void Dispose()
-        {
-        }
-        public void Run()
+        public override void Run()
         {
         }
 
-        public void SetUp()
+        public override void SetUp()
         {
+            _thrust = Component.Component;
+            // last known direction of this thruster. Needs an active cockpit to be set
+            _assumedDirection = Component.Component.GridThrustDirection;
+            if (Component.GetDirection() != Vector3I.Zero)
+                _setDirection = Component.GetDirection();
         }
     }
 }

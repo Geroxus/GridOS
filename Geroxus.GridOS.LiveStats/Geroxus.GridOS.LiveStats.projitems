@@ -7,7 +7,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)LiveStats.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)LiveStatsFactory.cs" />
   </ItemGroup>
   <Import Project="..\Geroxus.GridOs.Framework\Geroxus.GridOs.Framework.projitems" Label="Shared" />
 </Project>

@@ -3,9 +3,10 @@ using VRageMath;
 
 namespace IngameScript
 {
-    internal class EnrichedThrust : IEnrichedComponent<IMyThrust>
+    public class EnrichedThrust : IEnrichedComponent<IMyThrust>
     {
         private readonly string _direction;
+        public Vector3I definedDirection;
 
         public EnrichedThrust(IMyThrust component, string direction)
         {

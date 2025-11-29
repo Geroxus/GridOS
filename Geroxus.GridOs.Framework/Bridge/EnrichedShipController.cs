@@ -2,7 +2,7 @@ using Sandbox.ModAPI.Ingame;
 
 namespace IngameScript
 {
-    internal class EnrichedShipController : IEnrichedComponent<IMyShipController>
+    public class EnrichedShipController : IEnrichedComponent<IMyShipController>
     {
         public EnrichedShipController(IMyShipController shipController)
         {

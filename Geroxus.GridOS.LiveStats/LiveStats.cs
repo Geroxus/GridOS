@@ -6,25 +6,12 @@ using System.Text;
 
 namespace IngameScript
 {
-    public class LiveStats : IGridProgram
+    public class LiveStats : GridProgramBase
     {
         private readonly List<DisplayDriver> _processListDisplays = new List<DisplayDriver>();
         private readonly List<DisplayDriver> _flightCapabilityDisplays = new List<DisplayDriver>();
 
-        public LiveStats(ProcessId processId, string name)
-        {
-            ProcessId = processId;
-            Name = name;
-        }
-
-        public void Dispose()
-        {
-        }
-
-        public string Name { get; }
-        public ProcessId ProcessId { get; }
-
-        public void Run()
+        public override void Run()
         {
             // generate text to output
 
@@ -32,10 +19,13 @@ namespace IngameScript
             processListContent.AppendLine("Welcome to LiveStats! Here you'll soon find the stats. Live! Wow!");
             processListContent.AppendLine("Running Processes:");
             OsProcessBridge.Instance.GetAllProcesses()
-                // .Where(p => p.ProcessId.Id < 90000).ToList()
+                .Where(p => p.ProcessId.Id < 90000).ToImmutableList()
                 .Sort((p1, p2) => p1.ProcessId.Id < p2.ProcessId.Id ? -1 : 1)
                 .ForEach(p => processListContent.AppendLine($"{p.ProcessId.Id, 6 :N0}: {p.Name}"));
-            
+            int driversCount = OsProcessBridge.Instance.GetAllProcesses()
+                .Count(p => p.ProcessId.Id >= 90000);
+            processListContent.AppendLine($"And this many drivers: {driversCount}");
+
             StringBuilder flightCapabilityContent = new StringBuilder();
             FlightCapability flightCapabilityService = OsProcessBridge.Instance.GetServices(typeof(FlightCapability)).Single() as FlightCapability;
             if (flightCapabilityService == null)
@@ -61,7 +51,7 @@ namespace IngameScript
                 display.AppendLine(flightCapabilityContent.ToString());
         }
 
-        public void SetUp()
+        public override void SetUp()
         {
             //look through all displays and select those that should display stats
             // subsection GridOS.Program key program=LiveStats key setting=ProcessList
@@ -83,11 +73,6 @@ namespace IngameScript
                         break;
                 }
             }
-        }
-
-        public static void Register()
-        {
-            ProgramFactory.Register(new LiveStatsFactory());
         }
     }
 }

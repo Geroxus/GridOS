@@ -8,35 +8,41 @@ namespace IngameScript
     {
         private static readonly ProcessIdProvider ProcessIdProvider = new ProcessIdProvider();
 
-        public static IGridDriver Get<T>(IEnrichedComponent<T> enrichedComponent)
+        private static IGridDriver Create<TDriver, TComp>(TComp enrichedComponent) 
+            where TDriver : GridDriverBase<TComp>, new()
+            where TComp : IEnrichedComponent
         {
-            if (enrichedComponent.Component is IMyTextSurface)
+            TDriver driver = new TDriver();
+            string name = $"{typeof(TDriver).Name}[[{enrichedComponent.Name}]]";
+            driver.Initialize(ProcessIdProvider, name);
+            driver.SetComponent(enrichedComponent);
+            return driver;
+        }
+        public static Func<IEnrichedComponent, IGridDriver> Get<TComp>() where TComp : IEnrichedComponent
+        {
+            if (typeof(TComp) == typeof(EnrichedTextSurface))
             {
-                if (!OsProcessBridge.Instance.GetDrivers(typeof(DisplayDriver))
-                        .Any(d => d.Name.Contains(enrichedComponent.Name)))
+                return (component) =>
                 {
-                    EnrichedTextSurface surface = enrichedComponent as EnrichedTextSurface;
-                    return new DisplayDriver(surface, ProcessIdProvider.Next(typeof(IGridDriver)),
-                        $"DisplayDriver[[{enrichedComponent.Name}]]");
-                }
-            } else if (enrichedComponent.Component is IMyShipController)
+                    EnrichedTextSurface surface = component as EnrichedTextSurface;
+                    return Create<DisplayDriver, EnrichedTextSurface>(surface);
+                };
+            }
+            if (typeof(TComp) == typeof(EnrichedShipController))
             {
-                IMyShipController shipController = enrichedComponent.Component as IMyShipController;
-                if (!OsProcessBridge.Instance.GetDrivers(typeof(InputDriver))
-                    .Any(d => d.Name.Contains(enrichedComponent.Name)))
+                return (component) =>
                 {
-                    return new InputDriver(shipController, ProcessIdProvider.Next(typeof(IGridDriver)),
-                        $"InputDriver[[{enrichedComponent.Name}]]");
-                }
-            } else if (enrichedComponent.Component is IMyThrust)
+                    EnrichedShipController controller = component as EnrichedShipController;
+                    return Create<InputDriver, EnrichedShipController>(controller);
+                };
+            }
+            if (typeof(TComp) == typeof(EnrichedThrust))
             {
-                IMyThrust thrust = enrichedComponent.Component as IMyThrust;
-                if (!OsProcessBridge.Instance.GetDrivers(typeof(ThrustDriver))
-                        .Any(d => d.Name.Contains(enrichedComponent.Name)))
+                return (component) =>
                 {
-                   return new ThrustDriver(thrust, ProcessIdProvider.Next(typeof(IGridDriver)),
-                       $"ThrustDriver[[{enrichedComponent.Name}]]", ((EnrichedThrust)enrichedComponent).GetDirection());
-                }
+                    EnrichedThrust thrust = component as EnrichedThrust;
+                    return Create<ThrustDriver, EnrichedThrust>(thrust);
+                };
             }
 
             throw new Exception("not implemented");

@@ -22,7 +22,7 @@ namespace IngameScript
             _gridTerminalSystem = gridTerminalSystem;
         }
 
-        public List<IGridDriver> Get<T>(Func<IEnrichedComponent<T>, IGridDriver> factory)
+        public List<IGridDriver> Get<T>(Func<IEnrichedComponent, IGridDriver> factory)
         {
             if (typeof(T) == typeof(IMyTextSurface))
                 return GetDisplayDrivers(factory);
@@ -34,7 +34,7 @@ namespace IngameScript
             throw new Exception($"Type '{typeof(T).Name}' is not supported");
         }
 
-        private List<IGridDriver> GetThrustDrivers<T>(Func<IEnrichedComponent<T>, IGridDriver> factory)
+        private List<IGridDriver> GetThrustDrivers(Func<IEnrichedComponent, IGridDriver> factory)
         {
            List<IMyThrust> thrusts = new List<IMyThrust>();
            _gridTerminalSystem.GetBlocksOfType(thrusts);
@@ -54,14 +54,14 @@ namespace IngameScript
                }
                thrust.CustomData = Ini.ToString();
 
-               IEnrichedComponent<T> enrichedThrust = new EnrichedThrust(thrust, direction) as IEnrichedComponent<T>;
+               EnrichedThrust enrichedThrust = new EnrichedThrust(thrust, direction);
                result.Add(factory(enrichedThrust));
            }
            
            return result;
         }
 
-        private List<IGridDriver> GetInputDrivers<T>(Func<IEnrichedComponent<T>,IGridDriver> factory)
+        private List<IGridDriver> GetInputDrivers(Func<IEnrichedComponent,IGridDriver> factory)
         {
             List<IMyShipController> shipControllers = new List<IMyShipController>();
             _gridTerminalSystem.GetBlocksOfType(shipControllers);
@@ -72,15 +72,14 @@ namespace IngameScript
                 Ini.TryParse(shipController.CustomData);
                 if (!Ini.ContainsSection("GridOS")) continue;
 
-                IEnrichedComponent<T> enrichedShipController = new EnrichedShipController(shipController)
-                    as IEnrichedComponent<T>;
+                EnrichedShipController enrichedShipController = new EnrichedShipController(shipController);
                 result.Add(factory(enrichedShipController));
             }
             
             return result;
         }
 
-        private List<IGridDriver> GetDisplayDrivers<T>(Func<IEnrichedComponent<T>, IGridDriver> factory)
+        private List<IGridDriver> GetDisplayDrivers(Func<IEnrichedComponent, IGridDriver> factory)
         {
             List<IMyTerminalBlock> list = new List<IMyTerminalBlock>();
             _gridTerminalSystem.GetBlocksOfType(list, b => b is IMyTextSurfaceProvider);
@@ -124,9 +123,9 @@ namespace IngameScript
                     if (loadDisplay)
                     {
                         IMyTextSurface myTextSurface = myTextSurfaceProvider.GetSurface(i);
-                        IEnrichedComponent<T> enrichedTextSurface =
-                            new EnrichedTextSurface(myTextSurface, $"{myTerminalBlock.DisplayNameText}:{i}", program, settings) as
-                                IEnrichedComponent<T>;
+                        EnrichedTextSurface enrichedTextSurface =
+                            new EnrichedTextSurface(myTextSurface, $"{myTerminalBlock.DisplayNameText}:{i}", program,
+                                settings);
                         result.Add(factory(enrichedTextSurface));
                     }
 

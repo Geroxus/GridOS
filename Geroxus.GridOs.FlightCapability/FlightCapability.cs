@@ -7,52 +7,34 @@ using VRageMath;
 
 namespace IngameScript
 {
-    public class FlightCapability : IGridService<FlightCapabilityInfo>
+    public class FlightCapability : GridServiceBase<FlightCapabilityInfo>
     {
-        public FlightCapabilityInfo Info { get; private set; }
-        
-        public FlightCapability(ProcessId processId, string name)
-        {
-            Name = name;
-            ProcessId = processId;
-        }
-
-        public static void Register()
-        {
-            ProgramFactory.Register(new FlightCapabilityFactory());
-        }
-
-        public void Dispose()
-        {
-        }
-
-        public string Name { get; }
-        public ProcessId ProcessId { get; }
+        public override FlightCapabilityInfo Info => _info;
 
         private readonly StringBuilder _builder = new StringBuilder();
         private Dictionary<Vector3I, float> _maxThrustPerDirection;
         private float _forceOnShip = 0;
         private GridOsPlanet _selectedPlanet = new GridOsPlanet("Mars", new PhysicsValue<float>(PhysicsUnit.NewtonPerKilogram, 9.80665F * 0.9F));
+        private FlightCapabilityInfo _info;
 
-        public void Run()
+        public override void Run()
         {
             _builder.AppendLine("Flight Capability Observer:");
             FlightCapabilityInfo info = new FlightCapabilityInfo();
             InputDriver[] inputDrivers = OsProcessBridge.Instance.GetDrivers(typeof(InputDriver)).OfType<InputDriver>().ToArray();
             List<InputDriver> controlledInput = inputDrivers.Where(d => d.IsControlled).ToList();
-            if (inputDrivers.Any(d => d.Component.GetNaturalGravity().Equals(Vector3.Zero)))
+            if (inputDrivers.Any(d => d.GetNaturalGravity.Equals(Vector3.Zero)))
                 _builder.AppendLine("Currently in space");
             else
             {
                 // TODO this produces weird outputs when two controllers are present. Fix it
                 foreach (InputDriver inputDriver in controlledInput)
                 {
-                    Vector3D naturalGravity = inputDriver.Component.GetNaturalGravity();
-                    MyShipMass shipMass = inputDriver.Component.CalculateShipMass();
+                    Vector3D naturalGravity = inputDriver.GetNaturalGravity;
+                    MyShipMass shipMass = inputDriver.CalculateShipMass;
                     _builder.AppendLine($"Down: {_maxThrustPerDirection[Vector3I.Up]/1000}kN, Backward: {_maxThrustPerDirection[Vector3I.Forward]/1000}kN, Left: {_maxThrustPerDirection[Vector3I.Right]/1000}kN");
                     _builder.AppendLine($"Up: {_maxThrustPerDirection[Vector3I.Down]/1000}kN, Forward: {_maxThrustPerDirection[Vector3I.Backward]/1000}kN, Right: {_maxThrustPerDirection[Vector3I.Left]/1000}kN");
                     _forceOnShip = (float)((double)shipMass.PhysicalMass * naturalGravity.Length());
-                    _builder.AppendLine($"Safe to land on {_selectedPlanet.Name}({_selectedPlanet.Gravity.Value :F2}N/kg)? {(CanSustainFlight(shipMass, _selectedPlanet) ? "yes" : "no")}");
                     
                     info.ShipMass = new PhysicsValue<float>(PhysicsUnit.Kilogram, shipMass.PhysicalMass);
                     info.ShipGravity = new PhysicsValue<float>(PhysicsUnit.Newton, _forceOnShip);
@@ -62,7 +44,7 @@ namespace IngameScript
                 }
             }
 
-            Info = info;
+            _info = info;
             _builder.Clear();
         }
 
@@ -76,7 +58,7 @@ namespace IngameScript
             return _forceOnShip < _maxThrustPerDirection.Values.Max();
         }
 
-        public void SetUp()
+        public override void SetUp()
         {
             CalculateMaxThrustPerDirection();
         }

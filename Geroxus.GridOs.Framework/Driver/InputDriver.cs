@@ -1,36 +1,23 @@
 using Sandbox.ModAPI.Ingame;
+using VRageMath;
 
 namespace IngameScript
 {
-    public class InputDriver : IGridDriver
+    public class InputDriver : GridDriverBase<EnrichedShipController>
     {
-        public InputDriver(IMyShipController shipController, ProcessId processId, string name)
-        {
-            ProcessId = processId;
-            Name = name;
-            
-            Component = shipController;
-        }
 
-        /// <deprecated/>
-        /// Should not be used under any circumstances and is scheduled to be made private.
-        public IMyShipController Component { get; set; }
+        public bool IsControlled => Component.Component.IsUnderControl;
 
-        public bool IsControlled => Component.IsUnderControl;
-
-        public void Dispose()
-        {
-        }
-
-        public string Name { get; }
-        public ProcessId ProcessId { get; }
-        public void Run()
+        public override void Run()
         {
             
         }
 
-        public void SetUp()
+        public override void SetUp()
         {
         }
+
+        public Vector3D GetNaturalGravity => Component.Component.GetNaturalGravity();
+        public MyShipMass CalculateShipMass => Component.Component.CalculateShipMass();
     }
 }

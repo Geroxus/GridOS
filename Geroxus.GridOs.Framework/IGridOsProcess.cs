@@ -11,8 +11,14 @@ namespace IngameScript
          */
         void Run();
         /**
-         * This Method is called exactly once during its setup. No guarantees regarding specific running processes can be made
+         * This Method is called during its setup. It should never be called before boot initializations are done.
+         * It can be called again to reset the class to an initial state of sorts.
          */
         void SetUp();
+        /**
+         * This Method should be called exactly once after it has been initalized and never manually by any
+         * method other than the factory.
+         */
+        void Initialize(ProcessIdProvider processIdProvider, string name);
     }
 }

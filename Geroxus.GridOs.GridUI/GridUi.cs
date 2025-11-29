@@ -3,43 +3,24 @@ using System.Linq;
 
 namespace IngameScript
 {
-    public class GridUi : IGridUi
+    public class GridUi : GridProgramBase
     {
         private readonly OsProcessBridge _processBridge = OsProcessBridge.Instance;
         private Action<string> _write;
 
-        public GridUi(ProcessId processId, string name)
-        {
-            Name = name;
-            ProcessId = processId;
-        }
-
-        public string Name { get; }
-
-        public ProcessId ProcessId { get; }
-
-        public void Run()
+        public override void Run()
         {
             _write($"Welcome to GridOS v{GridOs.Version}");
             _write(Environment.NewLine);
 
         }
 
-        public void SetUp()
+        public override void SetUp()
         {
             _write = text => _processBridge.GetDrivers(typeof(DisplayDriver))
                 .Where(d => (d as DisplayDriver)?.Program == GridProgram.NONE)
                 .ToList()
                 .ForEach(d => (d as DisplayDriver)?.AppendLine(text));
-        }
-
-        public static void Register()
-        {
-           ProgramFactory.Register(new GridUiFactory()); 
-        }
-
-        public void Dispose()
-        {
         }
     }
 }
