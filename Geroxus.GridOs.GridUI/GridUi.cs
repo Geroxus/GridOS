@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -14,8 +15,14 @@ namespace IngameScript
         {
             _builder.AppendLine($"Welcome to GridOS v{GridOs.Instance.VersionString}");
             _builder.AppendLine($"Online for {GridOs.Instance.ActiveTime}");
-            _builder.AppendLine();
             _builder.Append(Environment.NewLine);
+
+            foreach (StringBuilder uiComponent in OsUiBridge.Instance.AllComponents.Values)
+            {
+                _builder.Append(uiComponent);
+                uiComponent.Clear();
+            }
+            
             _write(_builder.ToString());
             _builder.Clear();
         }
@@ -27,6 +34,7 @@ namespace IngameScript
                 .ToList()
                 .ForEach(d => (d as DisplayDriver)?.AppendLine(text));
         }
+
 
         public void Display(String text)
         {

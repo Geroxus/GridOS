@@ -42,7 +42,7 @@ namespace IngameScript
         {
             switch (updateSource)
             {
-                case UpdateType.Once:
+                case UpdateType.Terminal:
                     if (argument.Contains("-log"))
                        LOGGER.SetLogLevelInfo(); 
                     else
