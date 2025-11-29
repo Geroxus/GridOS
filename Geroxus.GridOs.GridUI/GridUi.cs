@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Text;
 
 namespace IngameScript
 {
@@ -7,12 +8,16 @@ namespace IngameScript
     {
         private readonly OsProcessBridge _processBridge = OsProcessBridge.Instance;
         private Action<string> _write;
+        private StringBuilder _builder = new StringBuilder();
 
         public override void Run()
         {
-            _write($"Welcome to GridOS v{GridOs.Version}");
-            _write(Environment.NewLine);
-
+            _builder.AppendLine($"Welcome to GridOS v{GridOs.Instance.VersionString}");
+            _builder.AppendLine($"Online for {GridOs.Instance.ActiveTime}");
+            _builder.AppendLine();
+            _builder.Append(Environment.NewLine);
+            _write(_builder.ToString());
+            _builder.Clear();
         }
 
         public override void SetUp()
@@ -21,6 +26,11 @@ namespace IngameScript
                 .Where(d => (d as DisplayDriver)?.Program == GridProgram.NONE)
                 .ToList()
                 .ForEach(d => (d as DisplayDriver)?.AppendLine(text));
+        }
+
+        public void Display(String text)
+        {
+            _builder.AppendLine(text);
         }
     }
 }

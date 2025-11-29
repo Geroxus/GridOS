@@ -32,7 +32,6 @@ namespace IngameScript
             _os = GridOs.BootStrap(GridTerminalSystem);
             LOGGER.RegisterOutput(s => Echo(s));
 
-            LOGGER.Always($"Welcome to Grid Os Version v{_os.VersionString}!");
         }
 
         public void Save()
@@ -45,13 +44,11 @@ namespace IngameScript
             {
                 case UpdateType.Once:
                     if (argument.Contains("-log"))
-                    {
                        LOGGER.SetLogLevelInfo(); 
-                    }
                     else
-                    {
                         LOGGER.DisableLogging();
-                    }
+                    if (argument.Contains("SetHorizontalSpeed"))
+                        OsFlagBridge.Instance.HorizontalSpeed = Int32.Parse(argument.Replace("SetHorizontalSpeed", ""));
                     break;
                 case UpdateType.Update10:
                     _os.Operate();

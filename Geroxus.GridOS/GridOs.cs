@@ -6,10 +6,12 @@ namespace IngameScript
 {
     public class GridOs
     {
+        private static readonly GridOs _instance;
+        public static GridOs Instance { get; } = _instance ?? (_instance = new GridOs());
         private Dictionary<ProcessId, IGridOsProcess> Processes { get; } = new Dictionary<ProcessId, IGridOsProcess>();
         private OsProcessBridge ProcessBridge { get; } = OsProcessBridge.Instance;
 
-        private static readonly DateTime  BuildDate = new DateTime(2025, 11, 27);
+        private static readonly DateTime  BuildDate = new DateTime(2025, 11, 29);
         public static string Version { get; } = $"0.1-beta-{BuildDate.Date.ToShortDateString()}";
         public string VersionString => Version;
 
@@ -19,12 +21,16 @@ namespace IngameScript
         {
             // configure and setup bridges
             OsGridAccessBridge.Instance.RegisterGridTerminalSystem(gridTerminalSystem);
-
-            return new GridOs();
+            
+            return Instance;
         }
+
+        public DateTime BootTime { get;}
+        public TimeSpan ActiveTime => DateTime.Now.Subtract(BootTime);
 
         private GridOs()
         {
+            BootTime = DateTime.Now;
             OsProcessBridge.Instance.RegisterProcessLists(Processes);
             
             ProcessBridge.Register(ProgramFactory.Create<BootService>());
@@ -32,7 +38,8 @@ namespace IngameScript
 
         public void Operate()
         {
-            LOGGER.Info($"Operating v{Version}");
+            LOGGER.Always($"Welcome to Grid Os Version v{VersionString}!");
+            LOGGER.Always($"Operating for {ActiveTime.ToString()}");
             foreach (IGridOsProcess process in Processes.Values)
             {
                 LOGGER.Info($"Process: {process.GetType().Name} : {process.Name}");

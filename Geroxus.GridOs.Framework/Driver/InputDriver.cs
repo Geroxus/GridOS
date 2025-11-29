@@ -17,7 +17,7 @@ namespace IngameScript
         {
         }
 
-        public Vector3D GetNaturalGravity => Component.Component.GetNaturalGravity();
-        public MyShipMass CalculateShipMass => Component.Component.CalculateShipMass();
+        public Vector3D GetNaturalGravity() => Component.Component.GetNaturalGravity();
+        public MyShipMass CalculateShipMass() => Component.Component.CalculateShipMass();
     }
 }

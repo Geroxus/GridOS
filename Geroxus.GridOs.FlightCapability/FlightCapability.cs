@@ -23,15 +23,16 @@ namespace IngameScript
             FlightCapabilityInfo info = new FlightCapabilityInfo();
             InputDriver[] inputDrivers = OsProcessBridge.Instance.GetDrivers(typeof(InputDriver)).OfType<InputDriver>().ToArray();
             List<InputDriver> controlledInput = inputDrivers.Where(d => d.IsControlled).ToList();
-            if (inputDrivers.Any(d => d.GetNaturalGravity.Equals(Vector3.Zero)))
+            if (inputDrivers.Any(d => d.GetNaturalGravity().Equals(Vector3.Zero)))
+            {
                 _builder.AppendLine("Currently in space");
+            }
             else
             {
-                // TODO this produces weird outputs when two controllers are present. Fix it
                 foreach (InputDriver inputDriver in controlledInput)
                 {
-                    Vector3D naturalGravity = inputDriver.GetNaturalGravity;
-                    MyShipMass shipMass = inputDriver.CalculateShipMass;
+                    Vector3D naturalGravity = inputDriver.GetNaturalGravity();
+                    MyShipMass shipMass = inputDriver.CalculateShipMass();
                     _builder.AppendLine($"Down: {_maxThrustPerDirection[Vector3I.Up]/1000}kN, Backward: {_maxThrustPerDirection[Vector3I.Forward]/1000}kN, Left: {_maxThrustPerDirection[Vector3I.Right]/1000}kN");
                     _builder.AppendLine($"Up: {_maxThrustPerDirection[Vector3I.Down]/1000}kN, Forward: {_maxThrustPerDirection[Vector3I.Backward]/1000}kN, Right: {_maxThrustPerDirection[Vector3I.Left]/1000}kN");
                     _forceOnShip = (float)((double)shipMass.PhysicalMass * naturalGravity.Length());
@@ -43,7 +44,6 @@ namespace IngameScript
                     info.TargetFlightSustain = new FlightSustain(CanSustainFlight(shipMass, _selectedPlanet), _selectedPlanet);
                 }
             }
-
             _info = info;
             _builder.Clear();
         }
