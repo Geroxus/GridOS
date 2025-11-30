@@ -15,7 +15,7 @@ namespace IngameScript
 
         public override string ToString()
         {
-            return $"{Value.ToString()}{Unit.Short()}";
+            return $"{Value:N}{Unit.Short()}";
         }
     }
 

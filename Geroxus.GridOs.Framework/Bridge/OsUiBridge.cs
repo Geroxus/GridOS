@@ -5,10 +5,10 @@ namespace IngameScript
 {
     public class OsUiBridge : OsBridge<OsUiBridge>
     {
-        private Dictionary<ProcessId, StringBuilder> _uiComponents = new Dictionary<ProcessId, StringBuilder>();
-        public Dictionary<ProcessId, StringBuilder> AllComponents => _uiComponents;
+        private readonly Dictionary<ProcessId, GridUiHandler> _uiComponents = new Dictionary<ProcessId, GridUiHandler>();
+        public Dictionary<ProcessId, GridUiHandler> AllComponents => _uiComponents;
 
-        public StringBuilder GetUiComponent(IGridOsProcess process)
+        public GridUiHandler GetUiComponent(IGridOsProcess process)
         {
             return _uiComponents.GetValueOrNew(process.ProcessId);
         }

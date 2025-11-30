@@ -17,10 +17,9 @@ namespace IngameScript
             _builder.AppendLine($"Online for {GridOs.Instance.ActiveTime}");
             _builder.Append(Environment.NewLine);
 
-            foreach (StringBuilder uiComponent in OsUiBridge.Instance.AllComponents.Values)
+            foreach (GridUiHandler uiComponent in OsUiBridge.Instance.AllComponents.Values)
             {
-                _builder.Append(uiComponent);
-                uiComponent.Clear();
+                _builder.Append(uiComponent.Out());
             }
             
             _write(_builder.ToString());
