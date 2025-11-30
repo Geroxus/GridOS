@@ -43,12 +43,21 @@ namespace IngameScript
             switch (updateSource)
             {
                 case UpdateType.Terminal:
+                case UpdateType.Once:
+                case UpdateType.Trigger:
                     if (argument.Contains("-log"))
                        LOGGER.SetLogLevelInfo(); 
                     else
                         LOGGER.DisableLogging();
-                    if (argument.Contains("SetHorizontalSpeed"))
-                        OsFlagBridge.Instance.HorizontalSpeed = Int32.Parse(argument.Replace("SetHorizontalSpeed", ""));
+                    if (argument.Contains("SetVerticalSpeed"))
+                    {
+                        int? speedToSet = Int32.Parse(argument.Replace("SetVerticalSpeed", ""));
+                        if (speedToSet != null && speedToSet != 0)
+                            OsFlagBridge.Instance.VerticalSpeed = speedToSet;
+                        else
+                            OsFlagBridge.Instance.VerticalSpeed = null;
+                    }
+
                     break;
                 case UpdateType.Update10:
                     _os.Operate();

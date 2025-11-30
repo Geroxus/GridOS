@@ -13,14 +13,18 @@ namespace IngameScript
 
         private readonly StringBuilder _builder = new StringBuilder();
         private Dictionary<Vector3I, float> _maxThrustPerDirection;
+        private Dictionary<Vector3I, float> _thrustPerDirection;
         private float _forceOnShip = 0;
         private GridOsPlanet _selectedPlanet = new GridOsPlanet("Mars", new PhysicsValue<float>(PhysicsUnit.NewtonPerKilogram, 9.80665F * 0.9F));
         private FlightCapabilityInfo _info;
 
         public override void Run()
         {
+            // first do calculation
+            CalculateCurrentThrustPerDirection();
+            
+            // then do output stuff (TODO)
             _builder.AppendLine("Flight Capability Observer:");
-            FlightCapabilityInfo info = new FlightCapabilityInfo();
             InputDriver[] inputDrivers = OsProcessBridge.Instance.GetDrivers(typeof(InputDriver)).OfType<InputDriver>().ToArray();
             List<InputDriver> controlledInput = inputDrivers.Where(d => d.IsControlled).ToList();
             if (inputDrivers.Any(d => d.GetNaturalGravity().Equals(Vector3.Zero)))
@@ -37,14 +41,24 @@ namespace IngameScript
                     _builder.AppendLine($"Up: {_maxThrustPerDirection[Vector3I.Down]/1000}kN, Forward: {_maxThrustPerDirection[Vector3I.Backward]/1000}kN, Right: {_maxThrustPerDirection[Vector3I.Left]/1000}kN");
                     _forceOnShip = (float)((double)shipMass.PhysicalMass * naturalGravity.Length());
                     
-                    info.ShipMass = new PhysicsValue<float>(PhysicsUnit.Kilogram, shipMass.PhysicalMass);
-                    info.ShipGravity = new PhysicsValue<float>(PhysicsUnit.Newton, _forceOnShip);
-                    info.NaturalGravity = new PhysicsValue<float>(PhysicsUnit.NewtonPerKilogram, (float)naturalGravity.Length());
-                    info.CurrentFlightSustain = new FlightSustain(CanSustainFlight());
-                    info.TargetFlightSustain = new FlightSustain(CanSustainFlight(shipMass, _selectedPlanet), _selectedPlanet);
+                    _info.ShipMass = new PhysicsValue<float>(PhysicsUnit.Kilogram, shipMass.PhysicalMass);
+                    _info.ShipGravity = new PhysicsValue<float>(PhysicsUnit.Newton, _forceOnShip);
+                    _info.NaturalGravity = new PhysicsValue<float>(PhysicsUnit.NewtonPerKilogram, (float)naturalGravity.Length());
+                    _info.CurrentFlightSustain = new FlightSustain(CanSustainFlight());
+                    _info.TargetFlightSustain = new FlightSustain(CanSustainFlight(shipMass, _selectedPlanet), _selectedPlanet);
                 }
             }
-            _info = info;
+
+            foreach (KeyValuePair<Vector3I, float> maxThrustInDirection in _maxThrustPerDirection)
+            {
+                _info.MaxThrustPerDirection[maxThrustInDirection.Key] = new PhysicsValue<float>(PhysicsUnit.Newton, maxThrustInDirection.Value);
+            }
+
+            foreach (KeyValuePair<Vector3I, float> thrustInDirection in _thrustPerDirection)
+            {
+                _info.ThrustPerDirection[thrustInDirection.Key] = new PhysicsValue<float>(PhysicsUnit.Newton, thrustInDirection.Value);
+            }
+
             _builder.Clear();
         }
 
@@ -60,12 +74,20 @@ namespace IngameScript
 
         public override void SetUp()
         {
+            _info = new FlightCapabilityInfo();
+            _info.MaxThrustPerDirection = new Dictionary<Vector3I, PhysicsValue<float>>();
+            _info.ThrustPerDirection = new Dictionary<Vector3I, PhysicsValue<float>>();
             CalculateMaxThrustPerDirection();
         }
 
         private void CalculateMaxThrustPerDirection()
         {
             _maxThrustPerDirection = SumPerDirection(d => d.MaxThrust);
+        }
+
+        private void CalculateCurrentThrustPerDirection()
+        {
+            _thrustPerDirection = SumPerDirection(d => d.CurrentThrust);
         }
 
         private Dictionary<Vector3I, float> SumPerDirection(Func<ThrustDriver, float> thrustAccessFunction)

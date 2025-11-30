@@ -26,5 +26,10 @@ namespace IngameScript
             if (Component.GetDirection() != Vector3I.Zero)
                 _setDirection = Component.GetDirection();
         }
+
+        public void SetThrustPercent(float percentThrust)
+        {
+            Component.Component.ThrustOverridePercentage = percentThrust;
+        }
     }
 }

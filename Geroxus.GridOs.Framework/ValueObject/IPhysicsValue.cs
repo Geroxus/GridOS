@@ -12,6 +12,11 @@ namespace IngameScript
 
         public PhysicsUnit Unit { get; }
         public T Value { get; }
+
+        public override string ToString()
+        {
+            return $"{Value.ToString()}{Unit.Short()}";
+        }
     }
 
     public enum PhysicsUnit
