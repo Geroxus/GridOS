@@ -19,7 +19,13 @@ namespace IngameScript
 
             foreach (GridUiHandler uiComponent in OsUiBridge.Instance.AllComponents.Values)
             {
-                _builder.Append(uiComponent.Out());
+                foreach (IGridUiNode child in uiComponent.RootNode.Children)
+                {
+                    if (child.GetType() == typeof(TextNode))
+                    {
+                        _builder.Append(((TextNode)child).Out());
+                    }
+                }
             }
             
             _write(_builder.ToString());

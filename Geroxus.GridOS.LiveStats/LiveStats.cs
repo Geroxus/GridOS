@@ -16,7 +16,7 @@ namespace IngameScript
             // generate text to output
 
             StringBuilder processListContent = new StringBuilder();
-            processListContent.AppendLine("Welcome to LiveStats! Here you'll soon find the stats. Live! Wow!");
+            processListContent.AppendLine("Welcome to LiveStats!");
             processListContent.AppendLine("Running Processes:");
             OsProcessBridge.Instance.GetAllProcesses()
                 .Where(p => p.ProcessId.Id < 90000).ToImmutableList()
