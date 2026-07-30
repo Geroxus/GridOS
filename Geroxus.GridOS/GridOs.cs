@@ -43,7 +43,15 @@ namespace IngameScript
             foreach (IGridOsProcess process in Processes.Values)
             {
                 LOGGER.Info($"Process: {process.GetType().Name} : {process.Name}");
-                process.Run();
+                try
+                {
+                    process.Run();
+                }
+                catch (Exception e)
+                {
+                    LOGGER.Error(e.ToString());
+                    ProcessBridge.RegisterStop(process.ProcessId);
+                }
             }
             LOGGER.Info("Cleanup Operator");
             ProcessBridge.Run();
