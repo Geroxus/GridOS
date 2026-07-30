@@ -1,31 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFramework>netframework48</TargetFramework>
-        <RootNamespace>IngameScript</RootNamespace>
-        <LangVersion>6</LangVersion>
-        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-        <Configurations>Release;Debug</Configurations>
-        <Platforms>x64</Platforms>
-    </PropertyGroup>
-    <ItemGroup>
-        <PackageReference Include="Mal.Mdk2.PbAnalyzers" Version="2.1.11">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="Mal.Mdk2.PbPackager" Version="2.1.3">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="Mal.Mdk2.References" Version="2.2.4"/>
-    </ItemGroup>
-    <ItemGroup>
-        <None Remove="Instructions.readme"/>
-        <AdditionalFiles Include="Instructions.readme"/>
-        <AdditionalFiles Include="thumb.png"/>
-    </ItemGroup>
-    <Import Project="..\Geroxus.GridOs.Framework\Geroxus.GridOs.Framework.projitems" Label="Shared" />
-    <Import Project="..\Geroxus.GridOs.GridUI\Geroxus.GridOs.GridUI.projitems" Label="Shared" />
-    <Import Project="..\Geroxus.GridOs.FlightCapability\Geroxus.GridOs.FlightCapability.projitems" Label="Shared" />
-    <Import Project="..\Geroxus.GridOs.PersistentAccelarationService/Geroxus.GridOs.PersistentAccelarationService.projitems" Label="Shared" />
-    <Import Project="..\Geroxus.GridOS.LiveStats/Geroxus.GridOS.LiveStats.projitems" Label="Shared" />
+  <PropertyGroup>
+    <TargetFramework>netframework48</TargetFramework>
+    <RootNamespace>IngameScript</RootNamespace>
+    <LangVersion>6</LangVersion>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Configurations>Release;Debug</Configurations>
+    <Platforms>x64</Platforms>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Mal.Mdk2.PbAnalyzers" Version="2.1.17">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Mal.Mdk2.PbPackager" Version="2.2.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Mal.Mdk2.References" Version="2.2.9" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Instructions.readme" />
+    <AdditionalFiles Include="Instructions.readme" />
+    <AdditionalFiles Include="thumb.png" />
+  </ItemGroup>
+  <Import Project="..\Geroxus.GridOs.Framework\Geroxus.GridOs.Framework.projitems" Label="Shared" />
+  <Import Project="..\Geroxus.GridOs.GridUI\Geroxus.GridOs.GridUI.projitems" Label="Shared" />
+  <Import Project="..\Geroxus.GridOs.FlightCapability\Geroxus.GridOs.FlightCapability.projitems" Label="Shared" />
+  <Import Project="..\Geroxus.GridOs.PersistentAccelarationService/Geroxus.GridOs.PersistentAccelarationService.projitems" Label="Shared" />
+  <Import Project="..\Geroxus.GridOS.LiveStats/Geroxus.GridOS.LiveStats.projitems" Label="Shared" />
 </Project>
