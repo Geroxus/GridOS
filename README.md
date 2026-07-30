@@ -1,0 +1,1 @@
+I decided that after returning to this project after a long while that I forgot everything I had intended to do and thus will going forward provide documentation. Probably only for myself but at least it'll help me return.
