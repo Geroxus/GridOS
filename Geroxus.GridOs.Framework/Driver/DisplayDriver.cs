@@ -14,7 +14,11 @@ namespace IngameScript
         private IMyTextSurface _component;
         private string _lastContent = String.Empty;
 
-        private StringBuilder DisplayText { get; } = new StringBuilder();
+        /**
+         * Write to this member to tell the Driver what to write onto the component.
+         * The component will NOT redraw if nothing changed.
+         */
+        public StringBuilder DisplayText { get; } = new StringBuilder();
 
         public override void Run()
         {
