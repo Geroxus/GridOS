@@ -29,9 +29,8 @@ namespace IngameScript
         {
             Runtime.UpdateFrequency = UpdateFrequency.Update10;
             
-            _os = GridOs.BootStrap(GridTerminalSystem);
             LOGGER.RegisterOutput(s => Echo(s));
-
+            _os = GridOs.BootStrap(GridTerminalSystem);
         }
 
         public void Save()

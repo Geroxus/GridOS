@@ -19,6 +19,7 @@ namespace IngameScript
             IMyGridTerminalSystem gridTerminalSystem
             )
         {
+            LOGGER.Always($"Welcome to Grid Os Version v{Version}!");
             // configure and setup bridges
             OsGridAccessBridge.Instance.RegisterGridTerminalSystem(gridTerminalSystem);
             
@@ -38,8 +39,8 @@ namespace IngameScript
 
         public void Operate()
         {
-            LOGGER.Always($"Welcome to Grid Os Version v{VersionString}!");
-            LOGGER.Always($"Operating for {ActiveTime.ToString()}");
+            // This shouldn't be logged like this and is actively harming permanent logs. I'll leave it here for future reference though
+            // LOGGER.Always($"Operating for {ActiveTime.ToString()}");
             foreach (IGridOsProcess process in Processes.Values)
             {
                 LOGGER.Info($"Process: {process.GetType().Name} : {process.Name}");
