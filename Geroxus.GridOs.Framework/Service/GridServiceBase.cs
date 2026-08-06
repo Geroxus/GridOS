@@ -12,8 +12,6 @@ namespace IngameScript
         public void Dispose()
         {
         }
-
-        public GridUiHandler Ui => OsUiBridge.Instance.GetUiComponent(this);
         public abstract void Run();
         public abstract void SetUp();
     }

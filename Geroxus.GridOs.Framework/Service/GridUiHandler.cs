@@ -6,6 +6,7 @@ namespace IngameScript
 {
     public class GridUiHandler
     {
+        public GridProgram Program { get; set; }
         public IGridUiNode RootNode { get; } = new ContainerNode();
     }
 
@@ -38,6 +39,11 @@ namespace IngameScript
 
     public abstract class GridUiNodeBase : IGridUiNode
     {
+        protected GridUiNodeBase()
+        {
+            Conditions.Add(GridUiDrawCondition.Always());
+        }
+
         public List<IGridUiNode> Children { get; } = new List<IGridUiNode>();
         public TNode CreateChildNode<TNode>() where TNode : IGridUiNode, new()
         {
@@ -46,7 +52,7 @@ namespace IngameScript
             return child;
         }
         
-        private List<IGridUiDrawCondition> Conditions { get; } = new List<IGridUiDrawCondition>();
+        public List<IGridUiDrawCondition> Conditions { get; } = new List<IGridUiDrawCondition>();
         public IGridUiNode AddDrawCondition(IGridUiDrawCondition condition)
         {
             Conditions.Add(condition);
@@ -70,9 +76,31 @@ namespace IngameScript
          * returns: self
          */
         IGridUiNode AddDrawCondition(IGridUiDrawCondition condition);
+         List<IGridUiDrawCondition> Conditions { get; }
     }
 
-     public interface IGridUiDrawCondition
+    public class GridUiDrawConditionWindowName : GridUiDrawCondition
     {
+        private string Name { get; }
+        public GridUiDrawConditionWindowName(string name)
+        {
+            Name = name;
+        }
+        public override bool Evaluate(string settings) => Name.ToLower().Equals(settings);
     }
+
+    public class GridUiDrawConditionAlways : GridUiDrawCondition
+    {
+        public override bool Evaluate(string settings) => true;
+    }
+    public abstract class GridUiDrawCondition : IGridUiDrawCondition
+    {
+        public static IGridUiDrawCondition WindowRequested(string name) => new GridUiDrawConditionWindowName(name);
+        public static IGridUiDrawCondition Always() => new GridUiDrawConditionAlways();
+        public abstract bool Evaluate(string settings);
+    }
+     public interface IGridUiDrawCondition
+     {
+         bool Evaluate(string settings);
+     }
 }

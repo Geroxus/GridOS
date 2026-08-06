@@ -14,8 +14,9 @@ namespace IngameScript
         public override void Run()
         {
             // generate text to output
-
-            StringBuilder processListContent = new StringBuilder();
+            TextNode processListContent = Ui.RootNode.Children[0].Children[0] as TextNode;
+            if (processListContent == null)
+                throw new NullReferenceException("ProcessListContent is not set!");
             processListContent.AppendLine("Welcome to LiveStats!");
             processListContent.AppendLine("Running Processes:");
             OsProcessBridge.Instance.GetAllProcesses()
@@ -26,6 +27,7 @@ namespace IngameScript
                 .Count(p => p.ProcessId.Id >= 90000);
             processListContent.AppendLine($"And this many drivers: {driversCount}");
 
+            // Flight capability doesn't get drawn right now due to restructuring things
             StringBuilder flightCapabilityContent = new StringBuilder();
             FlightCapability flightCapabilityService = OsProcessBridge.Instance.GetServices(typeof(FlightCapability)).Single() as FlightCapability;
             if (flightCapabilityService == null)
@@ -44,35 +46,18 @@ namespace IngameScript
             flightCapabilityContent.AppendLine(
                 $"Can sustain flight on {targetPlanet?.Name}({targetPlanet?.Gravity.Value :N}{targetPlanet?.Gravity.Unit.Short()})? {(flightCapabilityInfo.TargetFlightSustain.CanSustainFlight ? "Yes" : "No")}");
 
-            // write output to displays
-            foreach (DisplayDriver display in _processListDisplays)
-                display.AppendLine(processListContent.ToString());
-            foreach (DisplayDriver display in _flightCapabilityDisplays)
-                display.AppendLine(flightCapabilityContent.ToString());
         }
 
         public override void SetUp()
         {
-            //look through all displays and select those that should display stats
-            // subsection GridOS.Program key program=LiveStats key setting=ProcessList
-            ImmutableList<IGridDriver> drivers = OsProcessBridge.Instance.GetDrivers(typeof(DisplayDriver));
-            foreach (IGridDriver driver in drivers)
-            {
-                DisplayDriver display = driver as DisplayDriver;
-                if (display == null) throw new Exception("The display driver should never be null! CRITICAL");
-
-                switch (display.Program)
-                {
-                    case GridProgram.NONE:
-                        continue;
-                    case GridProgram.LiveStats:
-                        if (display.Settings.ToLower().Contains("processlist"))
-                            _processListDisplays.Add(display);
-                        else if (display.Settings.ToLower().Contains("flightcapability"))
-                            _flightCapabilityDisplays.Add(display);
-                        break;
-                }
-            }
+            Ui.Program = GridProgram.LiveStats;
+            Ui.RootNode.CreateChildNode<ContainerNode>()
+                .AddDrawCondition(GridUiDrawCondition.WindowRequested("ProcessList"))
+                .CreateChildNode<TextNode>();
+            Ui.RootNode.CreateChildNode<ContainerNode>()
+                .AddDrawCondition(GridUiDrawCondition.WindowRequested("FlightCapability"))
+                .CreateChildNode<TextNode>();
         }
     }
+
 }
