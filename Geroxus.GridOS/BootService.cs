@@ -21,7 +21,7 @@ namespace IngameScript
             LOGGER.Info("Driver registration complete");
 
             Processes.Register(ProgramFactory.Create<FlightCapability>());
-            Processes.Register(ProgramFactory.Create<PersistentAccelerationService>());
+            // Processes.Register(ProgramFactory.Create<PersistentAccelerationService>());
             
             Processes.Register(ProgramFactory.Create<LiveStats>());
             Processes.Register(ProgramFactory.Create<GridUi>());
