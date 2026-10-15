@@ -46,6 +46,11 @@ namespace IngameScript
             flightCapabilityContent.AppendLine(
                 $"Can sustain flight on {targetPlanet?.Name}({targetPlanet?.Gravity.Value :N}{targetPlanet?.Gravity.Unit.Short()})? {(flightCapabilityInfo.TargetFlightSustain.CanSustainFlight ? "Yes" : "No")}");
 
+            // Live Flight stats as for example the linear velocities
+            TextNode flightInfoContent = Ui.RootNode.Children[2].Children[0] as TextNode;
+            if (flightInfoContent == null)
+                throw new NullReferenceException("FlightInfoContent is not set!");
+            flightInfoContent.AppendLine("Flight Information:");
         }
 
         public override List<String> GetRequirements()
@@ -64,6 +69,9 @@ namespace IngameScript
                 .CreateChildNode<TextNode>();
             Ui.RootNode.CreateChildNode<ContainerNode>()
                 .AddDrawCondition(GridUiDrawCondition.WindowRequested("FlightCapability"))
+                .CreateChildNode<TextNode>();
+            Ui.RootNode.CreateChildNode<ContainerNode>()
+                .AddDrawCondition(GridUiDrawCondition.WindowRequested("FlightInfo"))
                 .CreateChildNode<TextNode>();
         }
     }

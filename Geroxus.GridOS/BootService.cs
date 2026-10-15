@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Sandbox.ModAPI.Ingame;
 
@@ -23,6 +24,7 @@ namespace IngameScript
             LOGGER.Info("Driver registration complete");
 
             Processes.Register(ProgramFactory.Create<FlightCapability>());
+            Processes.Register(ProgramFactory.Create<FlightService>());
             // Processes.Register(ProgramFactory.Create<PersistentAccelerationService>());
             
             Processes.Register(ProgramFactory.Create<LiveStats>());
