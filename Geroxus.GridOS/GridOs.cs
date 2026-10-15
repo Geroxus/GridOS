@@ -19,7 +19,6 @@ namespace IngameScript
             IMyGridTerminalSystem gridTerminalSystem
             )
         {
-            LOGGER.Always($"Welcome to Grid Os Version v{Version}!");
             // configure and setup bridges
             OsGridAccessBridge.Instance.RegisterGridTerminalSystem(gridTerminalSystem);
             
@@ -32,6 +31,7 @@ namespace IngameScript
         private GridOs()
         {
             BootTime = DateTime.Now;
+            LOGGER.RegisterBootTime(BootTime);
             OsProcessBridge.Instance.RegisterProcessLists(Processes);
             
             ProcessBridge.Register(ProgramFactory.Create<BootService>());
@@ -40,10 +40,11 @@ namespace IngameScript
         public void Operate()
         {
             // This shouldn't be logged like this and is actively harming permanent logs. I'll leave it here for future reference though
-            // LOGGER.Always($"Operating for {ActiveTime.ToString()}");
+            LOGGER.DisplayOnly($"Welcome to Grid Os Version v{Version}!");
+            LOGGER.DisplayOnly($"Operating for {ActiveTime.ToString()}");
+            LOGGER.Info($"Running {Processes.Count} processes");
             foreach (IGridOsProcess process in Processes.Values)
             {
-                LOGGER.Info($"Process: {process.GetType().Name} : {process.Name}");
                 try
                 {
                     process.Run();
@@ -54,7 +55,8 @@ namespace IngameScript
                     ProcessBridge.RegisterStop(process.ProcessId);
                 }
             }
-            LOGGER.Info("Cleanup Operator");
+
+            LOGGER.PrintLogs();
             ProcessBridge.Run();
         }
     }
