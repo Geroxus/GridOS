@@ -48,6 +48,11 @@ namespace IngameScript
             _builder.Clear();
         }
 
+        public override List<string> GetRequirements()
+        {
+            return new List<string>();
+        }
+
         public override void SetUp()
         {
             ScanGridForDisplays();

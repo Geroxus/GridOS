@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 namespace IngameScript
 {
     public abstract class GridServiceBase : IGridService
@@ -13,6 +16,7 @@ namespace IngameScript
         {
         }
         public abstract void Run();
+        public abstract List<String> GetRequirements();
         public abstract void SetUp();
     }
 

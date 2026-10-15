@@ -10,7 +10,6 @@ namespace IngameScript
 
         public override void Run()
         {
-            
         }
 
         public override void SetUp()

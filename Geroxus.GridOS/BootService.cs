@@ -13,6 +13,8 @@ namespace IngameScript
         {
         }
 
+        public override List<string> GetRequirements() => new List<String>();
+
         public override void SetUp()
         {
             Grid.Get<IMyTextSurface>(DriverFactory.Get<EnrichedTextSurface>()).ForEach(Processes.Register);

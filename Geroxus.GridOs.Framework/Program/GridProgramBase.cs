@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace IngameScript
 {
@@ -12,6 +13,7 @@ namespace IngameScript
         public ProcessId ProcessId { get; private set; }
         protected GridUiHandler Ui => OsUiBridge.Instance.GetUiComponent(this);
         public abstract void Run();
+        public abstract List<String> GetRequirements();
         public abstract void SetUp();
         public void Initialize(ProcessIdProvider processIdProvider, string name)
         {

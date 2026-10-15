@@ -62,6 +62,8 @@ namespace IngameScript
             _builder.Clear();
         }
 
+        public override List<string> GetRequirements() => new List<String>();
+
         private bool CanSustainFlight(MyShipMass shipMass, GridOsPlanet planet)
         {
             return shipMass.PhysicalMass * planet.Gravity.Value < _maxThrustPerDirection.Values.Max();

@@ -48,6 +48,14 @@ namespace IngameScript
 
         }
 
+        public override List<String> GetRequirements()
+        {
+            List<String> list =  new List<String>();
+            // list.Add(typeof(FlightService).ToString());
+            list.Add(typeof(FlightCapability).ToString());
+            return list;
+        }
+
         public override void SetUp()
         {
             Ui.Program = GridProgram.LiveStats;

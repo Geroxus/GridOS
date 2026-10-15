@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Sandbox.ModAPI.Ingame;
 
 namespace IngameScript
@@ -13,6 +14,7 @@ namespace IngameScript
         public ProcessId ProcessId { get; private set; }
         protected T Component { get; private set; }
         public abstract void Run();
+        public List<String> GetRequirements() => new List<String>();
         public abstract void SetUp();
         public void Initialize(ProcessIdProvider processIdProvider, string name)
         {

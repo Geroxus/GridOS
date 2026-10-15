@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace IngameScript
 {
@@ -11,8 +12,11 @@ namespace IngameScript
          */
         void Run();
         /**
+         * Lists the expected names of the processes needed for function. Without them function cannot be guaranteed.
+         */
+        List<String> GetRequirements();
+        /**
          * This Method is called during its setup. It should never be called before boot initializations are done.
-         * It can be called again to reset the class to an initial state of sorts.
          */
         void SetUp();
         /**
