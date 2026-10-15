@@ -10,7 +10,7 @@ namespace IngameScript
         private static Action<string> _echo;
         private static DateTime OsBootTime;
         private static TimeSpan OsActiveTime => DateTime.Now.Subtract(OsBootTime);
-        private static bool _info = true;
+        private static bool _info = false;
         private static bool _error = true;
         private static List<Log> _logs = new List<Log>();
 
