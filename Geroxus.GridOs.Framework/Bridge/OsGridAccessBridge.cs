@@ -95,13 +95,6 @@ namespace IngameScript
                 for (int i = 0; i < surfaceCount; i++)
                 {
                     bool loadDisplay = false;
-                    // this is for backwards compatibility with April 2025 builds
-                    if (Ini.ContainsKey("GridOS", i.ToString()))
-                    {
-                        loadDisplay |= Ini.Get("GridOS", i.ToString()).ToBoolean();
-                        Ini.Delete("GridOS", i.ToString());
-                    }
-                    
                     string section = $"GridOS.Display.{i.ToString()}";
                     GridProgram program = GridProgram.NONE;
                     String settings = String.Empty;
