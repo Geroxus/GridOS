@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Sandbox.ModAPI.Ingame;
@@ -6,9 +7,9 @@ using VRageMath;
 
 namespace IngameScript
 {
-    public class PersistentAccelerationService : GridServiceBase<AccelarationInformation>
+    public class PersistentAccelerationService : GridServiceBase<AccelerationInformation>
     {
-        private GridUiHandler _ui;
+        private TextNode _text;
         private int? _previousValue = null;
 
         /**
@@ -17,27 +18,26 @@ namespace IngameScript
         public override void Run()
         {
             // OsFlagBridge.Instance.HorizontalSpeed;
-            TextNode text = _ui.RootNode.CreateChildNode<TextNode>();
-            text.AppendLine("Acceleration");
+            _text.AppendLine("Acceleration");
             FlightCapability flightCapability = OsProcessBridge.Instance.GetServices(typeof(FlightCapability)).OfType<FlightCapability>().Single();
             PhysicsValue<float> forceNeededToMaintainSpeed = flightCapability.Info.ShipGravity;
             PhysicsValue<float> maxThrustUp = flightCapability.Info.MaxThrustPerDirection[Vector3I.Down];
             float percentThrust = ((float)forceNeededToMaintainSpeed.Value / (float)maxThrustUp.Value);
             InputDriver someController = OsProcessBridge.Instance.GetDrivers(typeof(InputDriver)).OfType<InputDriver>().First();
             Vector3D naturalGravity = someController.GetNaturalGravity();
-            text.AppendLine($"Gravity:x({naturalGravity.X,4:N})y({naturalGravity.Y,4:N})z({naturalGravity.Z,4:N})");
-            text.AppendLine($"Gravity:x({naturalGravity.Normalized().X,4:N})y({naturalGravity.Normalized().Y,4:N})z({naturalGravity.Normalized().Z,4:N})");
-            text.AppendLine($"ThrustPerDirection:{Environment.NewLine}" +
+            _text.AppendLine($"Gravity:x({naturalGravity.X,4:N})y({naturalGravity.Y,4:N})z({naturalGravity.Z,4:N})");
+            _text.AppendLine($"Gravity:x({naturalGravity.Normalized().X,4:N})y({naturalGravity.Normalized().Y,4:N})z({naturalGravity.Normalized().Z,4:N})");
+            _text.AppendLine($"ThrustPerDirection:{Environment.NewLine}" +
                            $"up     ({flightCapability.Info.ThrustPerDirection[Vector3I.Down].Value,15:N}){Environment.NewLine}" +
                            $"forward({flightCapability.Info.ThrustPerDirection[Vector3I.Backward].Value,15:N}){Environment.NewLine}" +
                            $"left   ({flightCapability.Info.ThrustPerDirection[Vector3I.Right].Value,15:N})");
-            text.AppendLine($"{forceNeededToMaintainSpeed.ToString()} vs {maxThrustUp.ToString()}");
+            _text.AppendLine($"{forceNeededToMaintainSpeed.ToString()} vs {maxThrustUp.ToString()}");
             if (OsFlagBridge.Instance.VerticalSpeed.HasValue)
             {
                 int verticalSpeed = OsFlagBridge.Instance.VerticalSpeed.Value;
                 _previousValue = verticalSpeed;
                 MaintainVerticalAcceleration(percentThrust);
-                text.AppendLine(verticalSpeed.ToString());
+                _text.AppendLine(verticalSpeed.ToString());
             }
             else if (_previousValue != null)
             {
@@ -55,10 +55,7 @@ namespace IngameScript
                 //remove safe percent
             }
 
-            TextNode text = _ui.RootNode.Children[0] as TextNode;
-            if (text == null)
-                throw new NullReferenceException("There should always be a text node at this point!");
-            text.AppendLine($"Acceleration set to: {percentThrust}");
+            _text.AppendLine($"Acceleration set to: {percentThrust}");
             SetThrusterToPercent(Vector3I.Down, percentThrust);
         }
 
@@ -70,15 +67,19 @@ namespace IngameScript
             }
         }
 
+        public override List<string> GetRequirements() => new List<string> { typeof(FlightCapability).ToString() } ;
+
         public override void SetUp()
         {
-            _ui = OsUiBridge.Instance.GetUiComponent(this);
+            GridUiHandler ui = OsUiBridge.Instance.GetUiComponent(this);
+            ui.Program = GridProgram.NONE;
+            _text = ui.RootNode.CreateChildNode<TextNode>();
         }
         
-        public override AccelarationInformation Info { get; }
+        public override AccelerationInformation Info { get; }
     }
 
-    public struct AccelarationInformation
+    public struct AccelerationInformation
     {
     }
 }
