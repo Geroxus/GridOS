@@ -1,5 +1,6 @@
 ﻿R e a d m e
 -----------
+GridOS is a system meant to take control of the entire Grid. It currently cannot fulfil that role and only reports
+specific values interesting to me.
 
-In this file you can include any instructions or other comments you want to have injected onto the 
-top of your final script. You can safely delete this file if you do not want any such comments.
+Build on: 2026-10-15 T10:31 CEST
