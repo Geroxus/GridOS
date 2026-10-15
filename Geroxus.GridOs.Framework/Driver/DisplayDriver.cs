@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Sandbox.ModAPI.Ingame;
 using VRage.Game.GUI.TextPanel;
@@ -10,9 +12,10 @@ namespace IngameScript
     {
         public GridProgram Program { get; private set; }
         public string Settings { get; private set; }
-        
+
         private IMyTextSurface _component;
         private string _lastContent = String.Empty;
+
 
         /**
          * Write to this member to tell the Driver what to write onto the component.
@@ -20,8 +23,12 @@ namespace IngameScript
          */
         public StringBuilder DisplayText { get; } = new StringBuilder();
 
+        public long ParentId { get; set; }
+        public int SurfaceIdentifiert { get; set; }
+
         public override void Run()
         {
+            // PollSettingsUpdate();
             switch (Program)
             {
                 case GridProgram.NONE:
@@ -34,16 +41,36 @@ namespace IngameScript
             }
         }
 
+        private void PollSettingsUpdate()
+        {
+            // currently this brakes the UI. Why? I would love to know too!
+            // TODO should test if there is an update provider and then poll the update here
+            if (false)
+            {
+                // poll settings update 
+            }
+            else
+            {
+                var services = OsProcessBridge.Instance.GetServices(typeof(ScanCustomDataService));
+                if (services.Count > 1)
+                    throw new Exception($"There shouldn't be more than one {typeof(ScanCustomDataService).ToString()}");
+                else if (services.Count == 1)
+                    Settings = ((ScanCustomDataService)services.Single())
+                        .GetUpdates(ParentId);
+            }
+        }
+
         private void CheckBeforeUpdate()
         {
             if (!DisplayText.ToString().Equals(_lastContent))
             {
-               _component.WriteText(DisplayText);
-               _lastContent = DisplayText.ToString();
-            } 
+                _component.WriteText(DisplayText);
+                _lastContent = DisplayText.ToString();
+            }
+
             DisplayText.Clear();
         }
-        
+
 
         public override void SetUp()
         {

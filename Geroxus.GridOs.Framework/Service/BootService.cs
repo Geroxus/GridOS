@@ -23,6 +23,7 @@ namespace IngameScript
             Grid.Get<IMyThrust>(DriverFactory.Get<EnrichedThrust>()).ForEach(Processes.Register);
             LOGGER.Info("Driver registration complete");
 
+            Processes.Register(ProgramFactory.Create<ScanCustomDataService>());
             Processes.Register(ProgramFactory.Create<FlightCapability>());
             Processes.Register(ProgramFactory.Create<FlightService>());
             // Processes.Register(ProgramFactory.Create<PersistentAccelerationService>());

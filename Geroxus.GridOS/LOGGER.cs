@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace IngameScript
 {
@@ -45,9 +46,9 @@ namespace IngameScript
                     return s => _logs.Add(new Log(OsActiveTime, "ERROR", s));
                 return s => { };
             }
-            private set {  }
+            private set { }
         }
-        
+
         public static Action<string> Info
         {
             get
@@ -56,34 +57,42 @@ namespace IngameScript
                     return s => _logs.Add(new Log(OsActiveTime, "INFO", s));
                 return s => { };
             }
-            private set {  }
+            private set { }
         }
 
         public static void PrintLogs(int maxListings = 15)
         {
+            _echo(GetLog(maxListings));
+        }
+
+        public static string GetLog(int maxListings = 15)
+        {
+            StringBuilder builder = new StringBuilder();
             int logsCount = maxListings > _logs.Count ? _logs.Count : maxListings;
             for (var i = 0; i < logsCount; i++)
             {
                 var log = _logs[_logs.Count - i - 1];
-                _echo(log.ToString());
+                builder.AppendLine(log.ToString());
             }
+
+            return builder.ToString();
         }
     }
 
     internal struct Log
     {
-        
         private TimeSpan UptimeStamp;
         private string Level;
         private string Message;
-        
+
         public Log(TimeSpan uptimeStamp, string level, string message)
         {
             UptimeStamp = uptimeStamp;
             Level = level;
             Message = message;
         }
-        
-        public override string ToString() => $"[[{UptimeStamp.Minutes}:{UptimeStamp.Seconds}.{UptimeStamp.Milliseconds}]][[{Level}]]: {Message}";
+
+        public override string ToString() =>
+            $"[[{UptimeStamp.Minutes}:{UptimeStamp.Seconds}.{UptimeStamp.Milliseconds}]][[{Level}]]: {Message}";
     }
 }

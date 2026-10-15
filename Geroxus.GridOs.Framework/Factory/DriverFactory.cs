@@ -8,7 +8,7 @@ namespace IngameScript
     {
         private static readonly ProcessIdProvider ProcessIdProvider = new ProcessIdProvider();
 
-        private static IGridDriver Create<TDriver, TComp>(TComp enrichedComponent) 
+        private static TDriver Create<TDriver, TComp>(TComp enrichedComponent) 
             where TDriver : GridDriverBase<TComp>, new()
             where TComp : IEnrichedComponent
         {
@@ -25,7 +25,10 @@ namespace IngameScript
                 return (component) =>
                 {
                     EnrichedTextSurface surface = component as EnrichedTextSurface;
-                    return Create<DisplayDriver, EnrichedTextSurface>(surface);
+                    DisplayDriver gridDriver = Create<DisplayDriver, EnrichedTextSurface>(surface);
+                    gridDriver.SurfaceIdentifiert = surface.SurfaceIdentifier;
+                    gridDriver.ParentId = surface.ParentId;
+                    return gridDriver;
                 };
             }
             if (typeof(TComp) == typeof(EnrichedShipController))

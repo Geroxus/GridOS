@@ -14,6 +14,7 @@ namespace IngameScript
 
         public override void Run()
         {
+            ((TextNode)Ui.RootNode.Children[0]).AppendLine(LOGGER.GetLog(30));
             // first get all currently available Displays
             // then write to displays as necessary
             _builder.AppendLine($"Welcome to GridOS v{GridOs.Instance.VersionString}");
@@ -24,11 +25,13 @@ namespace IngameScript
 
             foreach (GridUiHandler uiComponent in OsUiBridge.Instance.AllComponents.Values)
             {
-                foreach (DisplayDriver display in _displaysByProgram[uiComponent.Program])
+                LOGGER.Info($"{uiComponent.Program.ToString()}");
+                foreach (DisplayDriver display in _displaysByProgram.GetValueOrDefault(uiComponent.Program, new List<DisplayDriver>()))
                 {
                     //traverse Tree (NOT recursive to avoid possible memory limits)
                     //TODO replace with while(length(AllChildren)>0) to scan
-                    Queue<IGridUiNode> scanQueue = new Queue<IGridUiNode>(uiComponent.RootNode.Children);
+                    Queue<IGridUiNode> scanQueue = new Queue<IGridUiNode>();
+                    scanQueue.Enqueue(uiComponent.RootNode);
                     while (scanQueue.Count > 0)
                     {
                         IGridUiNode child = scanQueue.Dequeue();
@@ -55,6 +58,12 @@ namespace IngameScript
 
         public override void SetUp()
         {
+            Ui.Program = GridProgram.GridUi;
+            Ui.RootNode
+                .AddDrawCondition(new GridUiDrawConditionAlways())
+                .CreateChildNode<TextNode>()
+                .AddDrawCondition(new GridUiDrawConditionAlways());
+            
             ScanGridForDisplays();
             
             // assign output to this horrible piece of code

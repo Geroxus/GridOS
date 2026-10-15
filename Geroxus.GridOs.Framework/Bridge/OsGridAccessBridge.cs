@@ -81,6 +81,7 @@ namespace IngameScript
 
         private List<IGridDriver> GetDisplayDrivers(Func<IEnrichedComponent, IGridDriver> factory)
         {
+            // TODO this has to move out of here and into something that can scan the grid repeatedly without readding the same block over and over
             List<IMyTerminalBlock> list = new List<IMyTerminalBlock>();
             _gridTerminalSystem.GetBlocksOfType(list, b => b is IMyTextSurfaceProvider);
 
@@ -117,8 +118,13 @@ namespace IngameScript
                     {
                         IMyTextSurface myTextSurface = myTextSurfaceProvider.GetSurface(i);
                         EnrichedTextSurface enrichedTextSurface =
-                            new EnrichedTextSurface(myTextSurface, $"{myTerminalBlock.DisplayNameText}:{i}", program,
-                                settings);
+                            new EnrichedTextSurface(
+                                myTextSurface,
+                                $"{myTerminalBlock.DisplayNameText}:{i}",
+                                program,
+                                settings,
+                                i,
+                                myTerminalBlock.EntityId);
                         result.Add(factory(enrichedTextSurface));
                     }
 
@@ -129,6 +135,12 @@ namespace IngameScript
             }
 
             return result;
+        }
+
+        public string ReadDisplaySetting(long entityId)
+        {
+            Ini.TryParse(_gridTerminalSystem.GetBlockWithId(entityId).CustomData);
+            return Ini.Get("GridOS.Display.0", "settings").ToString();
         }
     }
 }

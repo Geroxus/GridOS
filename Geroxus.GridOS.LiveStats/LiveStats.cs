@@ -13,6 +13,23 @@ namespace IngameScript
 
         public override void Run()
         {
+            DrawProcessList();
+            DrawFlightCapability();
+            DrawLiveFlightStats();
+            DrawLog();
+        }
+
+        private void DrawLog()
+        {
+            TextNode logContent = Ui.RootNode.Children[3].Children[0] as TextNode;
+            if (logContent == null)
+                throw new NullReferenceException("LogContent is not set!");
+            logContent.AppendLine("Log:");
+            logContent.AppendLine(LOGGER.GetLog(30));
+        }
+
+        private void DrawProcessList()
+        {
             // generate text to output
             TextNode processListContent = Ui.RootNode.Children[0].Children[0] as TextNode;
             if (processListContent == null)
@@ -26,7 +43,19 @@ namespace IngameScript
             int driversCount = OsProcessBridge.Instance.GetAllProcesses()
                 .Count(p => p.ProcessId.Id >= 90000);
             processListContent.AppendLine($"And this many drivers: {driversCount}");
+        }
 
+        private void DrawLiveFlightStats()
+        {
+            // Live Flight stats as for example the linear velocities
+            TextNode flightInfoContent = Ui.RootNode.Children[2].Children[0] as TextNode;
+            if (flightInfoContent == null)
+                throw new NullReferenceException("FlightInfoContent is not set!");
+            flightInfoContent.AppendLine("Flight Information:");
+        }
+
+        private static void DrawFlightCapability()
+        {
             // Flight capability doesn't get drawn right now due to restructuring things
             StringBuilder flightCapabilityContent = new StringBuilder();
             FlightCapability flightCapabilityService = OsProcessBridge.Instance.GetServices(typeof(FlightCapability)).Single() as FlightCapability;
@@ -45,12 +74,6 @@ namespace IngameScript
             GridOsPlanet? targetPlanet = flightCapabilityInfo.TargetFlightSustain.Target;
             flightCapabilityContent.AppendLine(
                 $"Can sustain flight on {targetPlanet?.Name}({targetPlanet?.Gravity.Value :N}{targetPlanet?.Gravity.Unit.Short()})? {(flightCapabilityInfo.TargetFlightSustain.CanSustainFlight ? "Yes" : "No")}");
-
-            // Live Flight stats as for example the linear velocities
-            TextNode flightInfoContent = Ui.RootNode.Children[2].Children[0] as TextNode;
-            if (flightInfoContent == null)
-                throw new NullReferenceException("FlightInfoContent is not set!");
-            flightInfoContent.AppendLine("Flight Information:");
         }
 
         public override List<String> GetRequirements()
@@ -72,6 +95,9 @@ namespace IngameScript
                 .CreateChildNode<TextNode>();
             Ui.RootNode.CreateChildNode<ContainerNode>()
                 .AddDrawCondition(GridUiDrawCondition.WindowRequested("FlightInfo"))
+                .CreateChildNode<TextNode>();
+            Ui.RootNode.CreateChildNode<ContainerNode>()
+                .AddDrawCondition(GridUiDrawCondition.WindowRequested("Log"))
                 .CreateChildNode<TextNode>();
         }
     }
